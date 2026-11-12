@@ -16,7 +16,7 @@ button{font-family:inherit;font-weight:bold;color:#fff;border:0;border-radius:10
 button:active,button.on{transform:translateY(3px);box-shadow:0 1px 0 #6e0d42}
 button.alt{background:linear-gradient(#5fd0ff,#2077c4);box-shadow:0 4px 0 #0d3a6e}
 #pad{display:none;width:100%;max-width:440px;justify-content:space-between;align-items:center}
-@media (pointer:coarse){#bar #dropBtn{display:block;flex-basis:100%;font-size:20px;padding:12px 0;background:linear-gradient(#ffd23f,#ff9a3c);color:#2a0d40;box-shadow:0 4px 0 #8a4a00}#wrap{justify-content:flex-start;padding-top:14px}#bar{gap:6px}#bar button{font-size:12px;padding:6px 9px;box-shadow:0 3px 0 #6e0d42}#bar button.alt{box-shadow:0 3px 0 #0d3a6e}} /* 手机：改用手势，虚拟按键收起，按钮缩小 */
+@media (pointer:coarse){#bar #dropBtn{display:block;flex-basis:100%;font-size:20px;padding:12px 0;background:linear-gradient(#ffd23f,#ff9a3c);color:#2a0d40;box-shadow:0 4px 0 #8a4a00}#wrap{justify-content:flex-start;padding-top:14px;padding-bottom:64px}#bar{gap:6px}#bar button{font-size:12px;padding:6px 9px;box-shadow:0 3px 0 #6e0d42}#bar button.alt{box-shadow:0 3px 0 #0d3a6e}} /* 手机：改用手势，虚拟按键收起，按钮缩小 */
 .dpad{display:grid;grid-template-columns:repeat(3,58px);grid-template-rows:58px 58px;gap:6px}
 .dpad button{font-size:24px;padding:0}
 .act{display:flex;gap:12px;align-items:center}
@@ -140,7 +140,7 @@ function resize(){
   // 可用高度 = 窗口 - 按钮栏 - 手机按键 - 边框留白（说明文字改成弹窗，不再占位置）
   const bar=document.getElementById('bar'),pad=document.getElementById('pad');
   const below=(bar?bar.offsetHeight+10:60)+(pad&&pad.offsetHeight?pad.offsetHeight+10:0);
-  const availW=innerWidth-36, availH=innerHeight-below-44;
+  const availW=innerWidth-36, availH=innerHeight-below-44-(coarse?56:0); // 手机底部留 56px，避开 Netlify 角标
   const s=Math.max(0.8,Math.min(availW/W,availH/H));
   const dpr=window.devicePixelRatio||1;
   cv.style.width=Math.round(W*s)+'px';cv.style.height=Math.round(H*s)+'px';
