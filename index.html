@@ -11,12 +11,11 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 50% 25%,#241
 canvas{display:block;border-radius:10px;background:#000}
 #crt{position:absolute;inset:8px;border-radius:10px;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.25) 0 1px,transparent 1px 3px);box-shadow:inset 0 0 50px rgba(0,0,0,.75)}
 #bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-#dropBtn{display:none}
 button{font-family:inherit;font-weight:bold;color:#fff;border:0;border-radius:10px;background:linear-gradient(#ff5fb4,#c4207a);box-shadow:0 4px 0 #6e0d42,0 0 12px rgba(255,63,164,.4);padding:9px 14px;font-size:16px;cursor:pointer;touch-action:none}
 button:active,button.on{transform:translateY(3px);box-shadow:0 1px 0 #6e0d42}
 button.alt{background:linear-gradient(#5fd0ff,#2077c4);box-shadow:0 4px 0 #0d3a6e}
 #pad{display:none;width:100%;max-width:440px;justify-content:space-between;align-items:center}
-@media (pointer:coarse){#bar #dropBtn{display:block;flex-basis:100%;font-size:20px;padding:12px 0;background:linear-gradient(#ffd23f,#ff9a3c);color:#2a0d40;box-shadow:0 4px 0 #8a4a00}#wrap{justify-content:flex-start;padding-top:14px;padding-bottom:64px}#bar{gap:6px}#bar button{font-size:12px;padding:6px 9px;box-shadow:0 3px 0 #6e0d42}#bar button.alt{box-shadow:0 3px 0 #0d3a6e}} /* 手机：改用手势，虚拟按键收起，按钮缩小 */
+@media (pointer:coarse){#wrap{justify-content:flex-start;padding-top:14px;padding-bottom:64px}#bar{gap:6px}#bar button{font-size:12px;padding:6px 9px;box-shadow:0 3px 0 #6e0d42}#bar button.alt{box-shadow:0 3px 0 #0d3a6e}} /* 手机：改用手势，虚拟按键收起，按钮缩小 */
 .dpad{display:grid;grid-template-columns:repeat(3,58px);grid-template-rows:58px 58px;gap:6px}
 .dpad button{font-size:24px;padding:0}
 .act{display:flex;gap:12px;align-items:center}
@@ -44,10 +43,7 @@ button.alt{background:linear-gradient(#5fd0ff,#2077c4);box-shadow:0 4px 0 #0d3a6
 <div id="wrap">
   <div id="cab"><canvas id="cv"></canvas><div id="crt"></div></div>
   <div id="bar">
-    <button id="dropBtn" data-e="drop" data-zh="⬇ 直下" data-en="⬇ DROP">⬇ 直下</button>
     <button data-e="start" data-zh="START / 暂停" data-en="START / PAUSE">START / 暂停</button>
-    <button class="alt" data-e="save" data-zh="💾 存档" data-en="💾 SAVE">💾 存档</button>
-    <button class="alt" data-e="load" data-zh="📂 读档" data-en="📂 LOAD">📂 读档</button>
     <button class="alt" data-e="ghost" data-zh="👻 影子" data-en="👻 GHOST">👻 影子</button>
     <button class="alt" data-e="mute" data-zh="🔊 声音" data-en="🔊 SOUND">🔊 声音</button>
     <button class="alt" data-e="lang" data-zh="🌐 EN" data-en="🌐 中文">🌐 EN</button>
@@ -64,8 +60,8 @@ button.alt{background:linear-gradient(#5fd0ff,#2077c4);box-shadow:0 4px 0 #0d3a6
       <button data-e="rotCW" style="margin-bottom:34px">A<br>⟳</button>
     </div>
   </div>
-  <div id="help" data-zh="<b>标题画面</b>：A D / 十字键 / ◀▶ 选起始关卡 · W S / ↑ / 十字键上下 / ▼ 换难度（菜鸟 / 简单 / 普通 / 经典） · L 或 🌐 切换中/英（手柄：标题画面按 B/X）<br><b>键盘</b>：A D 移动 · S 加速 · → 顺转 · ← 逆转 · Enter 开始 · P 暂停（暂停时 W S 选 继续 / 重新开始 / 回主画面，Enter 确定） · F2 存档 · F4 读档 · G 影子开关 · M 声音 · V 联机对战<br><b>鼠标</b>：方块跟着鼠标左右走 · 左键 顺转 · 右键 直接落底（只有鼠标能落底）· 标题画面左键开始<br><b>手机手势</b>：左右拖 移动 · 轻点 顺转 · 往上划 逆转 · 往下快划 或按 ⬇直下 直接落底 · 按住往下拖 加速 · 标题画面左右划选关卡、上下划换难度、轻点开始<br><b>联机对战</b>：按 ⚔ 联机对战，房主「建房」把 6 位密钥发给朋友，朋友「加入」输入密钥。最多 3 人。一次消 2 行以上（或连锁）会送垃圾行，两个对手平分。<br><b>Xbox 手柄</b>：十字键/摇杆 移动 · A 顺转 · B/X 逆转 · Start 开始/暂停（暂停时 十字键上下 选 继续 / 重新开始 / 回主画面）· LB 存档 · RB 读档 · Y 影子开关<span class='x'>✖ 点一下或按 H 关闭</span>"
-    data-en="<b>Title screen</b>: A D / D-pad / ◀▶ pick start level · W S / ↑ / D-pad up-down / ▼ change mode (Noob / Easy / Normal / Classic) · L or 🌐 switch 中/EN (pad: B/X on title)<br><b>Keyboard</b>: A D move · S soft drop · → rotate CW · ← rotate CCW · Enter start · P pause (in pause: W S pick Continue / Restart / Menu, Enter to confirm) · F2 save · F4 load · G ghost · M sound · V online VS<br><b>Mouse</b>: piece follows the mouse left/right · left click rotate CW · right click hard drop (mouse only) · left click on title to start<br><b>Touch</b>: drag left/right move · tap rotate CW · swipe up rotate CCW · fast swipe down or ⬇ DROP button hard drop · hold & drag down soft drop · on title swipe ◀▶ level, ▲▼ mode, tap to start<br><b>Online VS</b>: tap ⚔ VS ONLINE, host CREATEs a room and sends the 6-letter key, friend JOINs with it. Up to 3 players. Clearing 2+ lines (or chains) sends garbage rows, split between your rivals.<br><b>Xbox pad</b>: D-pad/stick move · A rotate CW · B/X rotate CCW · Start start/pause (in pause: D-pad up/down → Continue / Restart / Menu) · LB save · RB load · Y ghost<span class='x'>✖ Click or press H to close</span>"></div>
+  <div id="help" data-zh="<b>标题画面</b>：A D / 十字键 / ◀▶ 选起始关卡 · W S / ↑ / 十字键上下 / ▼ 换难度（菜鸟 / 简单 / 普通 / 经典） · L 或 🌐 切换中/英（手柄：标题画面按 B/X）<br><b>键盘</b>：A D 移动 · S 加速 · → 顺转 · ← 逆转 · Enter 开始 · P 暂停（暂停时 W S 选 继续 / 重新开始 / 回主画面，Enter 确定） · G 影子开关 · M 声音 · V 联机对战<br><b>鼠标</b>：方块跟着鼠标左右走 · 左键 顺转 · 右键 直接落底（只有鼠标能落底）· 标题画面左键开始<br><b>手机手势</b>：左右拖 移动 · 轻点 顺转 · 往上划 逆转 · 往下快划 直接落底 · 按住往下拖 加速 · 标题画面左右划选关卡、上下划换难度、轻点开始<br><b>联机对战</b>：按 ⚔ 联机对战，房主「建房」把 6 位密钥发给朋友，朋友「加入」输入密钥。最多 3 人。一次消 2 行以上（或连锁）会送垃圾行，两个对手平分。<br><b>Xbox 手柄</b>：十字键/摇杆 移动 · A 顺转 · B/X 逆转 · Start 开始/暂停（暂停时 十字键上下 选 继续 / 重新开始 / 回主画面）· Y 影子开关<span class='x'>✖ 点一下或按 H 关闭</span>"
+    data-en="<b>Title screen</b>: A D / D-pad / ◀▶ pick start level · W S / ↑ / D-pad up-down / ▼ change mode (Noob / Easy / Normal / Classic) · L or 🌐 switch 中/EN (pad: B/X on title)<br><b>Keyboard</b>: A D move · S soft drop · → rotate CW · ← rotate CCW · Enter start · P pause (in pause: W S pick Continue / Restart / Menu, Enter to confirm) · G ghost · M sound · V online VS<br><b>Mouse</b>: piece follows the mouse left/right · left click rotate CW · right click hard drop (mouse only) · left click on title to start<br><b>Touch</b>: drag left/right move · tap rotate CW · swipe up rotate CCW · fast swipe down hard drop · hold & drag down soft drop · on title swipe ◀▶ level, ▲▼ mode, tap to start<br><b>Online VS</b>: tap ⚔ VS ONLINE, host CREATEs a room and sends the 6-letter key, friend JOINs with it. Up to 3 players. Clearing 2+ lines (or chains) sends garbage rows, split between your rivals.<br><b>Xbox pad</b>: D-pad/stick move · A rotate CW · B/X rotate CCW · Start start/pause (in pause: D-pad up/down → Continue / Restart / Menu) · Y ghost<span class='x'>✖ Click or press H to close</span>"></div>
 </div>
 <div id="vs" hidden>
   <div class="box">
@@ -176,7 +172,6 @@ const store={
   get(k){try{const v=localStorage.getItem(k);if(v!==null)return v;}catch(e){}return this.mem[k]??null;},
   set(k,v){this.mem[k]=v;try{localStorage.setItem(k,v);}catch(e){}}
 };
-const SAVE_KEY='skyblocks_save_v1';
 /* ---------- 难度模式 ----------
    noob    : 消行后每格各自往下掉、填满空洞（Joy Joy Kid 式），可连锁
    easy    : 上面整体下沉（同经典），被消到过的方块结构破坏、剩下的格子拆散各自往下掉；没被消到的方块保持整块不动，可连锁
@@ -215,7 +210,7 @@ const kHeld={left:false,right:false,down:false},pHeld={left:false,right:false,do
 const queue=[];
 const held=k=>kHeld[k]||pHeld[k]||tHeld[k];
 const KMAP_H={a:'left',A:'left',d:'right',D:'right',s:'down',S:'down'};
-const KMAP_E={ArrowRight:'rotCW',ArrowLeft:'rotCCW',ArrowUp:'up',w:'up',W:'up',x:'rotCW',X:'rotCW',z:'rotCCW',Z:'rotCCW',Enter:'start',' ':'start',p:'pause',P:'pause',Escape:'pause',F2:'save',F4:'load',m:'mute',M:'mute',g:'ghost',G:'ghost',l:'lang',L:'lang',h:'help',H:'help',v:'vs',V:'vs'};
+const KMAP_E={ArrowRight:'rotCW',ArrowLeft:'rotCCW',ArrowUp:'up',w:'up',W:'up',x:'rotCW',X:'rotCW',z:'rotCCW',Z:'rotCCW',Enter:'start',' ':'start',p:'pause',P:'pause',Escape:'pause',m:'mute',M:'mute',g:'ghost',G:'ghost',l:'lang',L:'lang',h:'help',H:'help',v:'vs',V:'vs'};
 addEventListener('keydown',e=>{
   if(e.target&&e.target.closest&&e.target.closest('#vs'))return;
   if(KMAP_H[e.key]){kHeld[KMAP_H[e.key]]=true;e.preventDefault();}
@@ -292,7 +287,7 @@ const touchEnd=e=>{
 };
 addEventListener('pointerup',touchEnd);addEventListener('pointercancel',touchEnd);
 let prevBtn={};
-const PAD_E={0:'rotCW',3:'ghost',1:'rotCCW',2:'rotCCW',9:'start',8:'pause',4:'save',5:'load',12:'up'};
+const PAD_E={0:'rotCW',3:'ghost',1:'rotCCW',2:'rotCCW',9:'start',8:'pause',12:'up'};
 function pollPad(){
   pHeld.left=pHeld.right=pHeld.down=false;
   const gps=navigator.getGamepads?navigator.getGamepads():[];
@@ -322,15 +317,15 @@ let ghostOn=store.get('skyblocks_ghost_v1')==='1';
 let lang=store.get('skyblocks_lang_v1')||((navigator.language||'').toLowerCase().startsWith('zh')?'zh':'en');
 const ZH={'ARCADE PUZZLE  -  1990 STYLE':'街机益智 · 1990 风格','PRESS START':'按 START 开始','CREDIT 99':'投币 99',
  'SCORE':'得分','HI-SCORE':'最高分','LEVEL':'关卡','LINES':'行数','SPEED':'速度','NEXT':'下一个',
- 'MOVE':'移动','DROP':'加速','ROT':'顺转','ROT-':'逆转','PAUSE':'暂停','SAVE':'存档','LOAD':'读档','GHOST':'影子','ON':'开','OFF':'关','START':'START',
- 'GAME':'游戏','OVER':'结束','NEW HI-SCORE!':'新纪录！','4 LINES!!':'四行消！！','LEVEL UP!':'升级！','PLAYING ONLY':'游戏中才能存',
- 'SAVED ✓':'已存档 ✓','NO SAVE DATA':'没有存档','LOADED - PRESS START':'已读档 · 按 START','SAVE BROKEN':'存档坏了',
+ 'MOVE':'移动','DROP':'加速','ROT':'顺转','ROT-':'逆转','PAUSE':'暂停','GHOST':'影子','ON':'开','OFF':'关','START':'START',
+ 'GAME':'游戏','OVER':'结束','NEW HI-SCORE!':'新纪录！','4 LINES!!':'四行消！！','LEVEL UP!':'升级！',
+ 
  'CONTINUE':'继续','RESTART':'重新开始','MENU':'回主画面','▲▼ + START':'▲▼ 选 · START 确定','SOUND OFF':'声音 关','SOUND ON':'声音 开','GHOST ON':'影子 开','GHOST OFF':'影子 关',
- '◀▶ LEVEL · ▲▼ MODE · F4/RB LOAD':'◀▶ 选关 · ▲▼ 难度 · L 语言 · F4/RB 读档','中文':'中文',
+ '◀▶ LEVEL · ▲▼ MODE · L LANG':'◀▶ 选关 · ▲▼ 难度 · L 语言','中文':'中文',
  'NOOB MODE':'菜鸟模式','EASY MODE':'简单模式','EASY':'简单','NORMAL MODE':'普通模式','CLASSIC MODE':'经典模式','MODE':'难度','NOOB':'菜鸟','NORMAL':'普通','CLASSIC':'经典',
  'ALL BLOCKS FALL INTO HOLES':'全部方块往下掉 · 填满空洞',
  'GIVE UP':'认输','MATCH IN PROGRESS':'还有人在打，等一下','YOU':'你','YOU WIN!':'你赢了！','YOU LOSE':'你输了','RIVAL':'对手','WINS':'战绩','VS MODE':'联机对战','CONNECTED!':'连上了！',
- 'DISCONNECTED':'对手断线了','WAITING FOR HOST':'等房主按 START','HOST: ◀▶ LEVEL · ▲▼ MODE':'房主：◀▶ 选关 · ▲▼ 难度','NOT IN VS MODE':'联机时不能存/读档',
+ 'DISCONNECTED':'对手断线了','WAITING FOR HOST':'等房主按 START','HOST: ◀▶ LEVEL · ▲▼ MODE':'房主：◀▶ 选关 · ▲▼ 难度',
  'RIVAL LEFT - YOU WIN!':'对手认输，你赢了！','GO!':'开打！','PRESS START TO FIGHT':'按 START 开打','SEND':'送出','INCOMING':'来袭','CLEARED PIECES BREAK APART':'被消到的方块散开 · 各自往下掉','CLEARED PIECES FALL AS ONE':'被消到的方块整块往下掉','ORIGINAL BLOCK RULES':'原汁原味 · 不填空洞'};
 function tr(s){
   if(lang!=='zh')return s;
@@ -778,28 +773,6 @@ document.querySelectorAll('[data-share]').forEach(b=>{
     try{await navigator.share({text:v});}catch(e){}};
 });
 
-/* ---------- 存档 / 读档 ---------- */
-function doSave(){
-  const playing=state==='play'||(state==='pause'&&pauseFrom==='play');
-  if(!playing){toast('PLAYING ONLY');sfx.ui();return;}
-  store.set(SAVE_KEY,JSON.stringify({mode,board,ids,pid,cur,next,score,lines,level,startLevel,lastPick,t:Date.now()}));
-  toast('SAVED ✓');sfx.ui();
-}
-function doLoad(){
-  const s=store.get(SAVE_KEY);
-  if(!s){toast('NO SAVE DATA');sfx.ui();return;}
-  try{
-    const d=JSON.parse(s);
-    setMode(MODES.includes(d.mode)?d.mode:'noob');
-    board=d.board;ids=Array.isArray(d.ids)?d.ids:cellIds(board);
-    pid=typeof d.pid==='number'?d.pid:ids.flat().reduce((a,v)=>Math.max(a,v||0),0);fallSet=new Set();
-    cur=d.cur;next=d.next;score=d.score;lines=d.lines;level=d.level;lastPick=d.lastPick;
-    startLevel=typeof d.startLevel==='number'?d.startLevel:Math.max(0,level-Math.floor(lines/10));
-    gravT=0;dasDir=0;downLock=true;state='pause';pauseFrom='play';
-    toast('LOADED - PRESS START');setTimeout(()=>{if(state==='pause')toast(MODE_NAME[mode]);},1900);sfx.ui();
-  }catch(e){toast('SAVE BROKEN');}
-}
-
 /* ---------- 事件处理 ---------- */
 function handle(e){
   audioInit();
@@ -820,9 +793,6 @@ function handle(e){
     }
     vsLeave();toast('DISCONNECTED');sfx.over();if(!$('vs').hidden)showVs('vsHome');return;
   }
-  if((e==='save'||e==='load')&&vs.on){toast('NOT IN VS MODE');sfx.ui();return;}
-  if(e==='save'){doSave();return;}
-  if(e==='load'){doLoad();return;}
   if(state==='pause'){ // 暂停菜单：继续 / 重新开始 / 回主画面
     if(e==='up'){pauseSel=(pauseSel+PAUSE_OPTS.length-1)%PAUSE_OPTS.length;sfx.move();}
     else if(e==='pause'){state=pauseFrom;sfx.ui();if(vs.on)vsSend({t:'resume'});}
@@ -984,7 +954,7 @@ function drawTitle(){
     txt(vs.host?'HOST: ◀▶ LEVEL · ▲▼ MODE':'WAITING FOR HOST',W/2,204,8,vs.host?'#cfc8ff':'#ffd23f','center');
   }else{
   txt('HI-SCORE '+String(hi).padStart(7,'0'),W/2,192,9,'#ffd23f','center');
-  txt('◀▶ LEVEL · ▲▼ MODE · F4/RB LOAD',W/2,204,8,'#cfc8ff','center');
+  txt('◀▶ LEVEL · ▲▼ MODE · L LANG',W/2,204,8,'#cfc8ff','center');
   }
   txt('CREDIT 99',W-6,214,7,'#ff9ad0','right');
 }
@@ -1036,8 +1006,8 @@ function drawGame(){
   if(next){const m=SHAPES[next],s=10,w=m.length*s;drawPiece(m,COLORS[next],268-w/2,(next==='I'?28:36),s);}
   panel(224,83,88,128);
   if(vs.on)drawOpp();else{
-  const tips=[['MODE',mode.toUpperCase()],...(TOUCH_UI?[['MOVE','DRAG ◀▶'],['DROP','⬇ / SWIPE▼'],['ROT','TAP'],['ROT-','SWIPE ▲']]:[['MOVE','A D/MOUSE'],['DROP','S/R-CLICK'],['ROT','→/Ⓐ/CLICK'],['ROT-','← / Ⓑ']]),['PAUSE','START'],['SAVE','F2 / LB'],['LOAD','F4 / RB'],['GHOST',ghostOn?'ON':'OFF']];
-  tips.forEach((t,i)=>{txt(t[0],230,88+i*13.5,8,'#cfc8ff');txt(t[1],306,88+i*13.5,8,i===0?MODE_COL[mode]:i===8?(ghostOn?'#4dff7a':'#ff4d6d'):'#fff','right');});
+  const tips=[['MODE',mode.toUpperCase()],...(TOUCH_UI?[['MOVE','DRAG ◀▶'],['DROP','SWIPE▼'],['ROT','TAP'],['ROT-','SWIPE ▲']]:[['MOVE','A D/MOUSE'],['DROP','S/R-CLICK'],['ROT','→/Ⓐ/CLICK'],['ROT-','← / Ⓑ']]),['PAUSE','START'],['GHOST',ghostOn?'ON':'OFF']];
+  tips.forEach((t,i)=>{txt(t[0],230,88+i*13.5,8,'#cfc8ff');txt(t[1],306,88+i*13.5,8,i===0?MODE_COL[mode]:t[0]==='GHOST'?(ghostOn?'#4dff7a':'#ff4d6d'):'#fff','right');});
   }
   }
   // 来袭垃圾行量表（井的左边）
