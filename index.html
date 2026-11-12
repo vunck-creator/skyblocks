@@ -414,11 +414,12 @@ function checkLines(){
   if(!clearRows.length)return false;
   chain++;
   const n=clearRows.length;
-  score+=[0,40,100,300,1200][n]*(level+1)*chain;
+  // 重力连锁一次可能消 5 行以上：表格只到 4 行，超过的每多一行再加 400（以前会变 NaN）
+  score+=(n<=4?[0,40,100,300,1200][n]:1200+(n-4)*400)*(level+1)*chain;
   if(chain>1){sfx.tetris();shakeT=12;toast(chain+' CHAIN!!');}
   else if(n===4){sfx.tetris();shakeT=18;toast('4 LINES!!');}
   else sfx.clear(n);
-  if(vs.on)vsAttack([0,0,1,2,4][n]+(chain-1));
+  if(vs.on)vsAttack((n<=4?[0,0,1,2,4][n]:n)+(chain-1));
   state='clear';clearT=24;
   return true;
 }
@@ -657,7 +658,7 @@ function openVs(){
 }
 // 攻击：先抵消自己身上待收的垃圾，剩下的送给对手
 function vsAttack(n){
-  if(n<=0)return;
+  n=n|0;if(!(n>0))return; // 保险：坏数字不准进来，免得 vs.pend 变 NaN、之后垃圾行全失效
   const off=Math.min(n,vs.pend);vs.pend-=off;n-=off;
   const tg=vsTargets(n);if(!tg.length)return;
   tg.forEach(([to,k])=>{const o={t:'atk',n:k,to,f:vs.me};if(vs.host)vsSendTo(to,o);else vsSend(o);});
