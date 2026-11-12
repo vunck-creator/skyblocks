@@ -15,12 +15,14 @@ button{font-family:inherit;font-weight:bold;color:#fff;border:0;border-radius:10
 button:active,button.on{transform:translateY(3px);box-shadow:0 1px 0 #6e0d42}
 button.alt{background:linear-gradient(#5fd0ff,#2077c4);box-shadow:0 4px 0 #0d3a6e}
 #pad{display:none;width:100%;max-width:440px;justify-content:space-between;align-items:center}
-@media (pointer:coarse){#pad{display:flex}#help{display:none}}
+@media (pointer:coarse){#pad{display:flex}}
 .dpad{display:grid;grid-template-columns:repeat(3,58px);grid-template-rows:58px 58px;gap:6px}
 .dpad button{font-size:24px;padding:0}
 .act{display:flex;gap:12px;align-items:center}
 .act button{width:70px;height:70px;border-radius:50%;font-size:20px;padding:0;line-height:1.1}
-#help{font-size:15px;line-height:1.7;color:#cfc8ff;text-align:center;max-width:720px}
+#help{display:none;position:fixed;z-index:15;left:50%;top:50%;transform:translate(-50%,-50%);width:min(720px,calc(100% - 32px));max-height:calc(100% - 32px);overflow:auto;box-sizing:border-box;padding:18px 20px 14px;border-radius:14px;background:rgba(11,8,40,.96);box-shadow:0 0 0 3px #5fd0ff,0 0 30px rgba(95,208,255,.45);font-size:15px;line-height:1.7;color:#cfc8ff;text-align:center;cursor:pointer}
+#help.show{display:block}
+#help .x{display:block;margin-top:8px;color:#ff9ad0;font-weight:bold}
 #help b{color:#ffd23f}
 #vs{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:rgba(5,4,15,.82);padding:12px;box-sizing:border-box;user-select:text;-webkit-user-select:text;touch-action:auto}
 #vs[hidden],#vs [hidden]{display:none!important}
@@ -48,6 +50,7 @@ button.alt{background:linear-gradient(#5fd0ff,#2077c4);box-shadow:0 4px 0 #0d3a6
     <button class="alt" data-e="mute" data-zh="🔊 声音" data-en="🔊 SOUND">🔊 声音</button>
     <button class="alt" data-e="lang" data-zh="🌐 EN" data-en="🌐 中文">🌐 EN</button>
     <button data-e="vs" data-zh="⚔ 联机对战" data-en="⚔ VS ONLINE">⚔ 联机对战</button>
+    <button class="alt" id="helpBtn" data-zh="❓ 说明" data-en="❓ HELP">❓ 说明</button>
   </div>
   <div id="pad">
     <div class="dpad">
@@ -59,8 +62,8 @@ button.alt{background:linear-gradient(#5fd0ff,#2077c4);box-shadow:0 4px 0 #0d3a6
       <button data-e="rotCW" style="margin-bottom:34px">A<br>⟳</button>
     </div>
   </div>
-  <div id="help" data-zh="<b>标题画面</b>：A D / 十字键 / ◀▶ 选起始关卡 · W S / ↑ / 十字键上下 / ▼ 换难度（菜鸟 / 普通 / 经典） · L 或 🌐 切换中/英（手柄：标题画面按 B/X）<br><b>键盘</b>：A D 移动 · S 加速 · → 顺转 · ← 逆转 · Enter 开始 · P 暂停（暂停时 W S 选 继续 / 重新开始 / 回主画面，Enter 确定） · F2 存档 · F4 读档 · G 影子开关 · M 声音 · V 联机对战<br><b>鼠标</b>：方块跟着鼠标左右走 · 左键 顺转 · 右键 直接落底（只有鼠标能落底）· 标题画面左键开始<br><b>联机对战</b>：按 ⚔ 联机对战，房主「建房」把 6 位密钥发给朋友，朋友「加入」输入密钥。一次消 2 行以上（或连锁）会给对手送垃圾行。<br><b>Xbox 手柄</b>：十字键/摇杆 移动 · A 顺转 · B/X 逆转 · Start 开始/暂停（暂停时 十字键上下 选 继续 / 重新开始 / 回主画面）· LB 存档 · RB 读档 · Y 影子开关"
-    data-en="<b>Title screen</b>: A D / D-pad / ◀▶ pick start level · W S / ↑ / D-pad up-down / ▼ change mode (Noob / Normal / Classic) · L or 🌐 switch 中/EN (pad: B/X on title)<br><b>Keyboard</b>: A D move · S soft drop · → rotate CW · ← rotate CCW · Enter start · P pause (in pause: W S pick Continue / Restart / Menu, Enter to confirm) · F2 save · F4 load · G ghost · M sound · V online VS<br><b>Mouse</b>: piece follows the mouse left/right · left click rotate CW · right click hard drop (mouse only) · left click on title to start<br><b>Online VS</b>: tap ⚔ VS ONLINE, host CREATEs a room and sends the 6-letter key, friend JOINs with it. Clearing 2+ lines (or chains) sends garbage rows to your rival.<br><b>Xbox pad</b>: D-pad/stick move · A rotate CW · B/X rotate CCW · Start start/pause (in pause: D-pad up/down → Continue / Restart / Menu) · LB save · RB load · Y ghost"></div>
+  <div id="help" data-zh="<b>标题画面</b>：A D / 十字键 / ◀▶ 选起始关卡 · W S / ↑ / 十字键上下 / ▼ 换难度（菜鸟 / 普通 / 经典） · L 或 🌐 切换中/英（手柄：标题画面按 B/X）<br><b>键盘</b>：A D 移动 · S 加速 · → 顺转 · ← 逆转 · Enter 开始 · P 暂停（暂停时 W S 选 继续 / 重新开始 / 回主画面，Enter 确定） · F2 存档 · F4 读档 · G 影子开关 · M 声音 · V 联机对战<br><b>鼠标</b>：方块跟着鼠标左右走 · 左键 顺转 · 右键 直接落底（只有鼠标能落底）· 标题画面左键开始<br><b>联机对战</b>：按 ⚔ 联机对战，房主「建房」把 6 位密钥发给朋友，朋友「加入」输入密钥。一次消 2 行以上（或连锁）会给对手送垃圾行。<br><b>Xbox 手柄</b>：十字键/摇杆 移动 · A 顺转 · B/X 逆转 · Start 开始/暂停（暂停时 十字键上下 选 继续 / 重新开始 / 回主画面）· LB 存档 · RB 读档 · Y 影子开关<span class='x'>✖ 点一下或按 H 关闭</span>"
+    data-en="<b>Title screen</b>: A D / D-pad / ◀▶ pick start level · W S / ↑ / D-pad up-down / ▼ change mode (Noob / Normal / Classic) · L or 🌐 switch 中/EN (pad: B/X on title)<br><b>Keyboard</b>: A D move · S soft drop · → rotate CW · ← rotate CCW · Enter start · P pause (in pause: W S pick Continue / Restart / Menu, Enter to confirm) · F2 save · F4 load · G ghost · M sound · V online VS<br><b>Mouse</b>: piece follows the mouse left/right · left click rotate CW · right click hard drop (mouse only) · left click on title to start<br><b>Online VS</b>: tap ⚔ VS ONLINE, host CREATEs a room and sends the 6-letter key, friend JOINs with it. Clearing 2+ lines (or chains) sends garbage rows to your rival.<br><b>Xbox pad</b>: D-pad/stick move · A rotate CW · B/X rotate CCW · Start start/pause (in pause: D-pad up/down → Continue / Restart / Menu) · LB save · RB load · Y ghost<span class='x'>✖ Click or press H to close</span>"></div>
 </div>
 <div id="vs" hidden>
   <div class="box">
@@ -129,7 +132,10 @@ const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 
 function resize(){
   const coarse=matchMedia('(pointer:coarse)').matches;
-  const availW=innerWidth-36, availH=innerHeight-(coarse?250:160);
+  // 可用高度 = 窗口 - 按钮栏 - 手机按键 - 边框留白（说明文字改成弹窗，不再占位置）
+  const bar=document.getElementById('bar'),pad=document.getElementById('pad');
+  const below=(bar?bar.offsetHeight+10:60)+(pad&&pad.offsetHeight?pad.offsetHeight+10:0);
+  const availW=innerWidth-36, availH=innerHeight-below-44;
   const s=Math.max(0.8,Math.min(availW/W,availH/H));
   const dpr=window.devicePixelRatio||1;
   cv.style.width=Math.round(W*s)+'px';cv.style.height=Math.round(H*s)+'px';
@@ -202,7 +208,7 @@ const kHeld={left:false,right:false,down:false},pHeld={left:false,right:false,do
 const queue=[];
 const held=k=>kHeld[k]||pHeld[k]||tHeld[k];
 const KMAP_H={a:'left',A:'left',d:'right',D:'right',s:'down',S:'down'};
-const KMAP_E={ArrowRight:'rotCW',ArrowLeft:'rotCCW',ArrowUp:'up',w:'up',W:'up',x:'rotCW',X:'rotCW',z:'rotCCW',Z:'rotCCW',Enter:'start',' ':'start',p:'pause',P:'pause',Escape:'pause',F2:'save',F4:'load',m:'mute',M:'mute',g:'ghost',G:'ghost',l:'lang',L:'lang',v:'vs',V:'vs'};
+const KMAP_E={ArrowRight:'rotCW',ArrowLeft:'rotCCW',ArrowUp:'up',w:'up',W:'up',x:'rotCW',X:'rotCW',z:'rotCCW',Z:'rotCCW',Enter:'start',' ':'start',p:'pause',P:'pause',Escape:'pause',F2:'save',F4:'load',m:'mute',M:'mute',g:'ghost',G:'ghost',l:'lang',L:'lang',h:'help',H:'help',v:'vs',V:'vs'};
 addEventListener('keydown',e=>{
   if(e.target&&e.target.closest&&e.target.closest('#vs'))return;
   if(KMAP_H[e.key]){kHeld[KMAP_H[e.key]]=true;e.preventDefault();}
@@ -289,6 +295,11 @@ function applyLang(){
   document.querySelectorAll('[data-zh]').forEach(el=>{el.innerHTML=el.dataset[lang];});
 }
 applyLang();
+// 操作说明：平时收起，点 ❓ 或按 H 弹出
+function toggleHelp(show){const h=document.getElementById('help');show=show===undefined?!h.classList.contains('show'):show;h.classList.toggle('show',show);
+  if(show&&GAME_STATES.includes(state)){pauseFrom=state;state='pause';if(vs.on)vsSend({t:'pause'});}sfx.ui();}
+document.getElementById('helpBtn').addEventListener('pointerdown',e=>{e.preventDefault();audioInit();toggleHelp();});
+document.getElementById('help').addEventListener('pointerdown',e=>{e.preventDefault();toggleHelp(false);});
 const MAXSTART=19;
 let startLevel=Math.min(MAXSTART,Math.max(0,parseInt(store.get('skyblocks_start_v1')||'0',10)||0));
 let selDir=0,selT=0;
@@ -666,6 +677,7 @@ function handle(e){
   if(e==='ghost'){ghostOn=!ghostOn;store.set('skyblocks_ghost_v1',ghostOn?'1':'0');toast(ghostOn?'GHOST ON':'GHOST OFF');sfx.ui();return;}
   if(e==='lang'){lang=lang==='zh'?'en':'zh';store.set('skyblocks_lang_v1',lang);applyLang();toast(lang==='zh'?'中文':'ENGLISH');sfx.ui();return;}
   if(e==='vs'){openVs();sfx.ui();return;}
+  if(e==='help'){toggleHelp();return;}
   if(e==='__vsopen'){toast('CONNECTED!');vsMsg(L('连上了！🎉','Connected! 🎉'));sfx.start();vsSendCfg();if(!$('vs').hidden)showVs('vsOn');return;}
   if(e==='__vsdrop'){if(vs.on){vsLeave();toast('DISCONNECTED');sfx.over();if(!$('vs').hidden)showVs('vsHome');}return;}
   if((e==='save'||e==='load')&&vs.on){toast('NOT IN VS MODE');sfx.ui();return;}
