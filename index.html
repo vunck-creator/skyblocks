@@ -127,11 +127,14 @@ button.alt{background:linear-gradient(#5fd0ff,#2077c4);box-shadow:0 4px 0 #0d3a6
 </script>
 <script>
 (()=>{
-const W=320,H=224,COLS=10,ROWS=18,CELL=11,BX=105,BY=13;
+let W=320,H=224;const COLS=10,ROWS=18,CELL=11,BX=105,BY=13;
+// 竖屏手机：画布改成窄长，井放大占满宽度，分数/NEXT 挪到上方一条
+let PORT=false;const PW=136,PH=242,PDX=13-BX,PDY=38-BY; // 井在竖屏画布里的位移
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 
 function resize(){
   const coarse=matchMedia('(pointer:coarse)').matches;
+  PORT=coarse&&innerHeight>innerWidth*1.2;W=PORT?PW:320;H=PORT?PH:224;
   // 可用高度 = 窗口 - 按钮栏 - 手机按键 - 边框留白（说明文字改成弹窗，不再占位置）
   const bar=document.getElementById('bar'),pad=document.getElementById('pad');
   const below=(bar?bar.offsetHeight+10:60)+(pad&&pad.offsetHeight?pad.offsetHeight+10:0);
@@ -226,7 +229,7 @@ document.querySelectorAll('[data-e]').forEach(b=>{
 });
 // 鼠标：方块跟着鼠标所在的列走，左键旋转，右键直接落底（只有鼠标有落底）
 const mouse={on:false,col:-1};
-function mouseCol(e){const r=cv.getBoundingClientRect();const gx=(e.clientX-r.left)/r.width*W;return Math.max(0,Math.min(COLS-1,Math.floor((gx-BX)/CELL)));}
+function mouseCol(e){const r=cv.getBoundingClientRect();const gx=(e.clientX-r.left)/r.width*W;return Math.max(0,Math.min(COLS-1,Math.floor((gx-BX-(PORT?PDX:0))/CELL)));}
 addEventListener('pointermove',e=>{
   if(e.pointerType!=='mouse'||!document.getElementById('vs').hidden)return;
   const c=mouseCol(e);if(c!==mouse.col){mouse.col=c;mouse.on=true;} // 鼠标真的换了列才接管，碰一下不会抢键盘
@@ -248,7 +251,7 @@ addEventListener('pointerdown',e=>{
   if(e.target.closest&&e.target.closest('button,#vs,#help,input,textarea'))return;
   e.preventDefault();audioInit();
   const r=cv.getBoundingClientRect();
-  Object.assign(touch,{id:e.pointerId,x:e.clientX,y:e.clientY,x0:e.clientX,y0:e.clientY,t0:performance.now(),colPx:Math.max(22,r.width/W*CELL*1.5),piece:null,soft:false});
+  Object.assign(touch,{id:e.pointerId,x:e.clientX,y:e.clientY,x0:e.clientX,y0:e.clientY,t0:performance.now(),colPx:Math.max(22,r.width/W*CELL*(PORT?1.1:1.5)),piece:null,soft:false});
   touch.on=GAME_STATES.includes(state);mouse.on=false;
 },{passive:false});
 addEventListener('pointermove',e=>{
@@ -829,7 +832,7 @@ function tick(){
 
 /* ---------- 画面 ---------- */
 const stars=Array.from({length:70},()=>({x:Math.random()*W,y:Math.random()*H,s:Math.random()*1.4+0.3,p:Math.random()*6}));
-let deco=[];
+let deco=[],skyNoBg=false;
 function txt(s,x,y,size,col,align='left'){
   s=tr(s);
   ctx.font=`bold ${size}px "Courier New",monospace`;ctx.textAlign=align;ctx.textBaseline='top';
@@ -845,7 +848,7 @@ function cell(px,py,col,s=CELL){
 function drawPiece(m,col,ox,oy,s){m.forEach((row,r)=>row.forEach((v,c)=>{if(v)cell(ox+c*s,oy+r*s,col,s);}));}
 function sky(){
   const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0a0730');g.addColorStop(0.6,'#25125a');g.addColorStop(1,'#5a1a6a');
-  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  if(!skyNoBg){ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
   stars.forEach(s=>{ctx.globalAlpha=0.4+0.6*Math.abs(Math.sin(frame/40+s.p));ctx.fillStyle='#fff';ctx.fillRect(s.x,s.y,s.s,s.s);});
   ctx.globalAlpha=1;
 }
@@ -890,6 +893,7 @@ function drawTitle(){
 }
 function drawGame(){
   sky();
+  if(PORT){ctx.save();ctx.translate(PDX,PDY);}
   ctx.save();
   if(shakeT>0)ctx.translate((Math.random()-.5)*4,(Math.random()-.5)*4);
   // 井
@@ -918,6 +922,7 @@ function drawGame(){
     ctx.restore();
   }
   ctx.restore();
+  if(!PORT){
   // 左面板
   panel(8,13,88,198);
   txt('SCORE',14,20,9,'#5fd0ff');txt(String(score).padStart(7,'0'),14,32,13,'#fff');
@@ -936,6 +941,7 @@ function drawGame(){
   if(vs.on)drawOpp();else{
   const tips=[['MODE',mode.toUpperCase()],...(TOUCH_UI?[['MOVE','DRAG ◀▶'],['DROP','SWIPE ▼'],['ROT','TAP'],['ROT-','SWIPE ▲']]:[['MOVE','A D/MOUSE'],['DROP','S/R-CLICK'],['ROT','→/Ⓐ/CLICK'],['ROT-','← / Ⓑ']]),['PAUSE','START'],['SAVE','F2 / LB'],['LOAD','F4 / RB'],['GHOST',ghostOn?'ON':'OFF']];
   tips.forEach((t,i)=>{txt(t[0],230,88+i*13.5,8,'#cfc8ff');txt(t[1],306,88+i*13.5,8,i===0?MODE_COL[mode]:i===8?(ghostOn?'#4dff7a':'#ff4d6d'):'#fff','right');});
+  }
   }
   // 来袭垃圾行量表（井的左边）
   if(vs.on&&vs.pend>0){const h=Math.min(ROWS,vs.pend)*CELL;ctx.fillStyle=(frame>>3)%2?'#ff4d6d':'#ff9a3c';ctx.fillRect(BX-6,BY+ROWS*CELL-h,3,h);}
@@ -961,6 +967,15 @@ function drawGame(){
     txt(String(score).padStart(7,'0'),BX+55,126,12,'#fff','center');
     if(overT>60&&(frame>>5)%2===0)txt('PRESS START',BX+55,150,9,'#ffd23f','center');
   }
+  if(PORT){ctx.restore();drawTopHud();}
+}
+function drawTopHud(){ // 竖屏上方信息条
+  panel(3,3,W-6,31);
+  txt('SCORE',7,7,7,'#5fd0ff');txt(String(score).padStart(7,'0'),7,17,10,'#fff');
+  txt('LV',55,7,7,'#5fd0ff');txt(String(level).padStart(2,'0'),55,17,10,'#ff9ad0');
+  if(vs.on){txt('VS',75,7,7,'#5fd0ff');txt(vs.wins+'-'+vs.loss,75,17,10,'#ffd23f');}
+  else{txt('LINES',75,7,7,'#5fd0ff');txt(String(lines).padStart(3,'0'),75,17,10,'#4dff7a');}
+  if(next){const m=SHAPES[next],s=5,w=m.length*s;drawPiece(m,COLORS[next],117-w/2,next==='I'?11:13,s);}
 }
 function drawOpp(){
   const s=6,ox=238,oy=99,o=vs.opp;
@@ -976,7 +991,10 @@ function drawOpp(){
   }
 }
 function draw(){
-  if(state==='title')drawTitle();else drawGame();
+  if(state==='title'&&PORT){ // 竖屏标题：把原来的横版标题缩小放中间
+    sky();const w0=W,h0=H,k=W/320;ctx.save();ctx.translate(0,(H-224*k)/2);ctx.scale(k,k);W=320;H=224;skyNoBg=true;
+    drawTitle();skyNoBg=false;W=w0;H=h0;ctx.restore();
+  }else if(state==='title')drawTitle();else drawGame();
   if(toastT>0){
     ctx.globalAlpha=Math.min(1,toastT/20);
     ctx.font='bold 11px "Courier New",monospace';
