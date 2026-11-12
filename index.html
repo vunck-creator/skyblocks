@@ -15,7 +15,7 @@ button{font-family:inherit;font-weight:bold;color:#fff;border:0;border-radius:10
 button:active,button.on{transform:translateY(3px);box-shadow:0 1px 0 #6e0d42}
 button.alt{background:linear-gradient(#5fd0ff,#2077c4);box-shadow:0 4px 0 #0d3a6e}
 #pad{display:none;width:100%;max-width:440px;justify-content:space-between;align-items:center}
-@media (pointer:coarse){#pad{display:flex}}
+@media (pointer:coarse){#wrap{justify-content:flex-start;padding-top:14px}#bar{gap:6px}#bar button{font-size:12px;padding:6px 9px;box-shadow:0 3px 0 #6e0d42}#bar button.alt{box-shadow:0 3px 0 #0d3a6e}} /* 手机：改用手势，虚拟按键收起，按钮缩小 */
 .dpad{display:grid;grid-template-columns:repeat(3,58px);grid-template-rows:58px 58px;gap:6px}
 .dpad button{font-size:24px;padding:0}
 .act{display:flex;gap:12px;align-items:center}
@@ -62,8 +62,8 @@ button.alt{background:linear-gradient(#5fd0ff,#2077c4);box-shadow:0 4px 0 #0d3a6
       <button data-e="rotCW" style="margin-bottom:34px">A<br>⟳</button>
     </div>
   </div>
-  <div id="help" data-zh="<b>标题画面</b>：A D / 十字键 / ◀▶ 选起始关卡 · W S / ↑ / 十字键上下 / ▼ 换难度（菜鸟 / 普通 / 经典） · L 或 🌐 切换中/英（手柄：标题画面按 B/X）<br><b>键盘</b>：A D 移动 · S 加速 · → 顺转 · ← 逆转 · Enter 开始 · P 暂停（暂停时 W S 选 继续 / 重新开始 / 回主画面，Enter 确定） · F2 存档 · F4 读档 · G 影子开关 · M 声音 · V 联机对战<br><b>鼠标</b>：方块跟着鼠标左右走 · 左键 顺转 · 右键 直接落底（只有鼠标能落底）· 标题画面左键开始<br><b>联机对战</b>：按 ⚔ 联机对战，房主「建房」把 6 位密钥发给朋友，朋友「加入」输入密钥。一次消 2 行以上（或连锁）会给对手送垃圾行。<br><b>Xbox 手柄</b>：十字键/摇杆 移动 · A 顺转 · B/X 逆转 · Start 开始/暂停（暂停时 十字键上下 选 继续 / 重新开始 / 回主画面）· LB 存档 · RB 读档 · Y 影子开关<span class='x'>✖ 点一下或按 H 关闭</span>"
-    data-en="<b>Title screen</b>: A D / D-pad / ◀▶ pick start level · W S / ↑ / D-pad up-down / ▼ change mode (Noob / Normal / Classic) · L or 🌐 switch 中/EN (pad: B/X on title)<br><b>Keyboard</b>: A D move · S soft drop · → rotate CW · ← rotate CCW · Enter start · P pause (in pause: W S pick Continue / Restart / Menu, Enter to confirm) · F2 save · F4 load · G ghost · M sound · V online VS<br><b>Mouse</b>: piece follows the mouse left/right · left click rotate CW · right click hard drop (mouse only) · left click on title to start<br><b>Online VS</b>: tap ⚔ VS ONLINE, host CREATEs a room and sends the 6-letter key, friend JOINs with it. Clearing 2+ lines (or chains) sends garbage rows to your rival.<br><b>Xbox pad</b>: D-pad/stick move · A rotate CW · B/X rotate CCW · Start start/pause (in pause: D-pad up/down → Continue / Restart / Menu) · LB save · RB load · Y ghost<span class='x'>✖ Click or press H to close</span>"></div>
+  <div id="help" data-zh="<b>标题画面</b>：A D / 十字键 / ◀▶ 选起始关卡 · W S / ↑ / 十字键上下 / ▼ 换难度（菜鸟 / 普通 / 经典） · L 或 🌐 切换中/英（手柄：标题画面按 B/X）<br><b>键盘</b>：A D 移动 · S 加速 · → 顺转 · ← 逆转 · Enter 开始 · P 暂停（暂停时 W S 选 继续 / 重新开始 / 回主画面，Enter 确定） · F2 存档 · F4 读档 · G 影子开关 · M 声音 · V 联机对战<br><b>鼠标</b>：方块跟着鼠标左右走 · 左键 顺转 · 右键 直接落底（只有鼠标能落底）· 标题画面左键开始<br><b>手机手势</b>（整个屏幕都能划）：左右拖 移动 · 轻点 顺转 · 往上划 逆转 · 往下快划 直接落底 · 按住往下拖 加速 · 标题画面左右划选关卡、上下划换难度、轻点开始<br><b>联机对战</b>：按 ⚔ 联机对战，房主「建房」把 6 位密钥发给朋友，朋友「加入」输入密钥。一次消 2 行以上（或连锁）会给对手送垃圾行。<br><b>Xbox 手柄</b>：十字键/摇杆 移动 · A 顺转 · B/X 逆转 · Start 开始/暂停（暂停时 十字键上下 选 继续 / 重新开始 / 回主画面）· LB 存档 · RB 读档 · Y 影子开关<span class='x'>✖ 点一下或按 H 关闭</span>"
+    data-en="<b>Title screen</b>: A D / D-pad / ◀▶ pick start level · W S / ↑ / D-pad up-down / ▼ change mode (Noob / Normal / Classic) · L or 🌐 switch 中/EN (pad: B/X on title)<br><b>Keyboard</b>: A D move · S soft drop · → rotate CW · ← rotate CCW · Enter start · P pause (in pause: W S pick Continue / Restart / Menu, Enter to confirm) · F2 save · F4 load · G ghost · M sound · V online VS<br><b>Mouse</b>: piece follows the mouse left/right · left click rotate CW · right click hard drop (mouse only) · left click on title to start<br><b>Touch</b> (swipe anywhere): drag left/right move · tap rotate CW · swipe up rotate CCW · fast swipe down hard drop · hold & drag down soft drop · on title swipe ◀▶ level, ▲▼ mode, tap to start<br><b>Online VS</b>: tap ⚔ VS ONLINE, host CREATEs a room and sends the 6-letter key, friend JOINs with it. Clearing 2+ lines (or chains) sends garbage rows to your rival.<br><b>Xbox pad</b>: D-pad/stick move · A rotate CW · B/X rotate CCW · Start start/pause (in pause: D-pad up/down → Continue / Restart / Menu) · LB save · RB load · Y ghost<span class='x'>✖ Click or press H to close</span>"></div>
 </div>
 <div id="vs" hidden>
   <div class="box">
@@ -239,6 +239,47 @@ cab.addEventListener('pointerdown',e=>{
   mouse.col=mouseCol(e);mouse.on=true;
   if(e.button===0)queue.push('rotCW');else if(e.button===2)queue.push('drop');
 });
+// 手机手势（整个屏幕都能划，手指不用挡住盘面）：左右拖 = 方块跟着走，轻点 = 顺转，
+// 往上划 = 逆转，往下快划 = 直接落底，按住往下拖 = 加速
+const TOUCH_UI=matchMedia('(pointer:coarse)').matches;
+const touch={on:false,id:null,x:0,y:0,x0:0,y0:0,t0:0,colPx:24,piece:null,baseX:0,soft:false};
+addEventListener('pointerdown',e=>{
+  if(e.pointerType==='mouse'||touch.id!==null)return;
+  if(e.target.closest&&e.target.closest('button,#vs,#help,input,textarea'))return;
+  e.preventDefault();audioInit();
+  const r=cv.getBoundingClientRect();
+  Object.assign(touch,{id:e.pointerId,x:e.clientX,y:e.clientY,x0:e.clientX,y0:e.clientY,t0:performance.now(),colPx:Math.max(22,r.width/W*CELL*1.5),piece:null,soft:false});
+  touch.on=GAME_STATES.includes(state);mouse.on=false;
+},{passive:false});
+addEventListener('pointermove',e=>{
+  if(e.pointerId!==touch.id)return;
+  touch.x=e.clientX;touch.y=e.clientY;
+  const dx=touch.x-touch.x0,dy=touch.y-touch.y0;
+  const s=state==='play'&&dy>touch.colPx*1.2&&dy>Math.abs(dx)*1.5&&performance.now()-touch.t0>200;
+  if(s!==touch.soft){touch.soft=s;tHeld.down=s;}
+});
+const touchEnd=e=>{
+  if(e.pointerId!==touch.id)return;
+  const dx=touch.x-touch.x0,dy=touch.y-touch.y0,dt=performance.now()-touch.t0,ax=Math.abs(dx),ay=Math.abs(dy);
+  touch.id=null;touch.on=false;if(touch.soft){touch.soft=false;tHeld.down=false;}
+  if(e.type==='pointercancel')return;
+  const tap=ax<12&&ay<12&&dt<350, sw=Math.max(ax,ay)>40&&dt<450;
+  if(state==='play'){
+    if(tap)queue.push('rotCW');
+    else if(sw&&ay>ax*2){if(dy>0)queue.push('drop');else queue.push('rotCCW');}
+  }else if(state==='title'){
+    if(tap)queue.push('rotCW');
+    else if(sw&&!(vs.on&&!vs.host)){
+      if(ax>ay)setStart(startLevel+(dx>0?1:-1));
+      else if(dy<0)queue.push('up');
+      else{setMode(MODES[(MODES.indexOf(mode)+1)%MODES.length]);sfx.ui();}
+    }
+  }else if(state==='pause'){
+    if(tap)queue.push('rotCW');
+    else if(sw&&ay>ax){if(dy<0)queue.push('up');else{pauseSel=(pauseSel+1)%PAUSE_OPTS.length;sfx.move();}}
+  }else if(tap)queue.push('rotCW');
+};
+addEventListener('pointerup',touchEnd);addEventListener('pointercancel',touchEnd);
 let prevBtn={};
 const PAD_E={0:'rotCW',3:'ghost',1:'rotCCW',2:'rotCCW',9:'start',8:'pause',4:'save',5:'load',12:'up'};
 function pollPad(){
@@ -735,6 +776,10 @@ function tick(){
       let lo=9,hi2=0;cur.m.forEach(row=>row.forEach((v,c)=>{if(v){lo=Math.min(lo,c);hi2=Math.max(hi2,c);}}));
       const tx=mouse.col-((lo+hi2)>>1);
       if(tx!==cur.x)tryMove(tx<cur.x?-1:1);
+    }else if(touch.on&&!touch.soft){ // 手指拖：按拖动距离换算成格数（相对移动）
+      if(touch.piece!==cur){touch.piece=cur;touch.baseX=cur.x;touch.x0=touch.x;}
+      const tx=touch.baseX+Math.round((touch.x-touch.x0)/touch.colPx);
+      if(tx!==cur.x&&!tryMove(tx<cur.x?-1:1)){touch.baseX=cur.x;touch.x0=touch.x;} // 撞墙就从这里重新算，往回拖马上有反应
     }
     // 下落：重力 + 软降（每 2 帧一格）
     let fall=false,soft=false;
@@ -889,7 +934,7 @@ function drawGame(){
   if(next){const m=SHAPES[next],s=10,w=m.length*s;drawPiece(m,COLORS[next],268-w/2,(next==='I'?28:36),s);}
   panel(224,83,88,128);
   if(vs.on)drawOpp();else{
-  const tips=[['MODE',mode.toUpperCase()],['MOVE','A D/MOUSE'],['DROP','S/R-CLICK'],['ROT','→/Ⓐ/CLICK'],['ROT-','← / Ⓑ'],['PAUSE','START'],['SAVE','F2 / LB'],['LOAD','F4 / RB'],['GHOST',ghostOn?'ON':'OFF']];
+  const tips=[['MODE',mode.toUpperCase()],...(TOUCH_UI?[['MOVE','DRAG ◀▶'],['DROP','SWIPE ▼'],['ROT','TAP'],['ROT-','SWIPE ▲']]:[['MOVE','A D/MOUSE'],['DROP','S/R-CLICK'],['ROT','→/Ⓐ/CLICK'],['ROT-','← / Ⓑ']]),['PAUSE','START'],['SAVE','F2 / LB'],['LOAD','F4 / RB'],['GHOST',ghostOn?'ON':'OFF']];
   tips.forEach((t,i)=>{txt(t[0],230,88+i*13.5,8,'#cfc8ff');txt(t[1],306,88+i*13.5,8,i===0?MODE_COL[mode]:i===8?(ghostOn?'#4dff7a':'#ff4d6d'):'#fff','right');});
   }
   // 来袭垃圾行量表（井的左边）
