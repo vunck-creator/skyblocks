@@ -388,16 +388,23 @@ function gameOver(){
   if(!vs.on&&score>hi){hi=score;store.set(HI_KEYS[mode],String(hi));toast('NEW HI-SCORE!');} // 联机对战不算最高分
 }
 function tryMove(dx){if(!collide(cur.m,cur.x+dx,cur.y)){cur.x+=dx;sfx.move();return true;}return false;}
+// 转不过去时依次试这些位置（dx, dy，dy 正数 = 往下）：先原地，再左右挪一格，再往下塞一两格。
+// 这样 S / Z / T 掉进窄缝后，一转就能塞进旁边被盖住的凹槽（手稿里那几种）。不往上踢，方块不会越转越高。
+const KICKS=[[0,0],[-1,0],[1,0],[0,1],[-1,1],[1,1],[0,2],[-1,2],[1,2],[-2,0],[2,0]];
+const KICKS_GROUND=[[0,2],[0,1],[0,0],[-1,1],[1,1],[-1,2],[1,2],[-1,0],[1,0],[-2,0],[2,0]];
 function tryRotate(dir){
   if(cur.k==='O')return;
   const m=rot(cur.m,dir);
-  // 转完如果凸出左右墙（竖着的方块在格子里偏右，贴左墙时最常见），就往里挪回墙内再试；
-  // 只躲墙，不躲已经堆好的方块（撞到方块照样转不了）
+  // 转完如果凸出左右墙（竖着的方块在格子里偏右，贴左墙时最常见），先往里挪回墙内
   let lo=COLS,hi=-1;
   m.forEach(row=>row.forEach((v,c)=>{if(v){lo=Math.min(lo,c);hi=Math.max(hi,c);}}));
   let x=cur.x;
   if(x+lo<0)x=-lo;else if(x+hi>=COLS)x=COLS-1-hi;
-  if(!collide(m,x,cur.y)){cur.m=m;cur.x=x;sfx.rot();}
+  // 已经踩在东西上（掉不下去了）就先试往下塞，这样才会钻进凹槽，而不是在原地转完卡在上面
+  const list=collide(cur.m,cur.x,cur.y+1)?KICKS_GROUND:KICKS;
+  for(const [dx,dy] of list){
+    if(!collide(m,x+dx,cur.y+dy)){cur.m=m;cur.x=x+dx;cur.y+=dy;sfx.rot();return;}
+  }
 }
 function lockPiece(){
   let above=false;const id=++pid;
