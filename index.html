@@ -421,7 +421,7 @@ function gameOver(){
     if(vs.host)vsBcast({t:'out',id:0});else vsSend({t:'lose'});vsOut(vs.me);}
   state='over';overT=0;sfx.over();
   if(!vs.on&&score>hi){hi=score;store.set(HI_KEYS[mode],String(hi));toast('NEW HI-SCORE!');} // 联机对战不算最高分
-  if(!vs.on&&score>0){const en={s:score,ln:lines,lv:level},m=mode;setTimeout(()=>{if(state==='over')rkOffer(m,en);},1000);} // 单人：上榜就问名字
+  if(!vs.on&&score>0)rkLater(); // 单人：上榜就问名字
 }
 function tryMove(dx){if(!collide(cur.m,cur.x+dx,cur.y)){cur.x+=dx;sfx.move();return true;}return false;}
 // 转不过去时依次试这些位置（dx, dy，dy 正数 = 往下）：先原地，再左右挪一格，再往下塞一两格。
@@ -824,7 +824,7 @@ document.querySelectorAll('[data-share]').forEach(b=>{
 const RANK_SITE='https://skyblock1990.netlify.app';
 const RANK_APIS=[...(/^https?:$/.test(location.protocol)?['/api/scores']:[]),...(RANK_SITE?[RANK_SITE.replace(/\/$/,'')+'/api/scores']:[])];
 const RK_LOCAL=10,RK_NET=50;
-const rk={note:'',mode:'noob',where:'net',net:null,netT:0,api:null,hl:null,entry:null,emode:null,busy:false};
+const rk={openT:0,note:'',mode:'noob',where:'net',net:null,netT:0,api:null,hl:null,entry:null,emode:null,busy:false};
 const rkKeyOf=m=>'skyblocks_rank_'+m+'_v1';
 function rkLocal(m){
   let l;try{l=JSON.parse(store.get(rkKeyOf(m))||'null');}catch(e){l=null;}
@@ -879,16 +879,16 @@ function rkPause(){if(GAME_STATES.includes(state)){pauseFrom=state;state='pause'
 function rkOpen(){rkPause();rk.hl=null;rkShow(RANK_APIS.length?rk.where:'local',mode);}
 function rkClose(){if(!$('rkName').hidden){rkSkip();return;}$('rk').hidden=true;try{document.activeElement.blur();}catch(e){}}
 // 游戏结束：本机前 10 或全网前 50 就问名字
+function rkLater(){const en={s:score,ln:lines,lv:level},m=mode;setTimeout(()=>rkOffer(m,en),700);}
 async function rkOffer(m,en){
-  let net=false;
-  if(RANK_APIS.length){try{const j=await rkLoadNet(true);net=rkQual(j[m]||[],en.s,RK_NET);}catch(e){}}
-  const loc=rkQual(rkLocal(m),en.s,RK_LOCAL);
-  if(!loc&&!net)return;
-  if(state!=='over'||!$('rk').hidden||!$('vs').hidden)return;
+  // 本机榜够格就马上问；不够格才去问全网榜（要等网络）
+  let ok=rkQual(rkLocal(m),en.s,RK_LOCAL);
+  if(!ok&&RANK_APIS.length){try{const j=await rkLoadNet(true);ok=rkQual(j[m]||[],en.s,RK_NET);}catch(e){}}
+  if(!ok||GAME_STATES.includes(state)||state==='pause'||!$('rk').hidden||!$('vs').hidden)return; // 已经开新的一局就不打扰
   rk.entry=en;rk.emode=m;rk.hl=null;
   $('rkScore').textContent=String(en.s).padStart(7,'0');
   $('rkIn').value=store.get('skyblocks_name_v1')||'';
-  $('rkView').hidden=true;$('rkName').hidden=false;$('rkMsg').textContent='';$('rk').hidden=false;
+  $('rkView').hidden=true;$('rkName').hidden=false;$('rkMsg').textContent='';$('rk').hidden=false;rk.openT=performance.now();
   if(!TOUCH_UI)setTimeout(()=>{try{$('rkIn').focus();$('rkIn').select();}catch(e){}},50); // 手机不自动弹键盘
   sfx.level();
 }
@@ -914,6 +914,7 @@ async function rkSave(){
 }
 // 排行榜开着时的按键：A/Start 保存或关闭，◀▶/A/B 换模式
 function rkKey(e){
+  if(performance.now()-rk.openT<600)return; // 刚弹出来时狂按的键不算
   if(!$('rkName').hidden){if(e==='start'||e==='rotCW')rkSave();else if(e==='pause'||e==='rotCCW')rkSkip();return;}
   if(e==='start'||e==='pause'){rkClose();sfx.ui();return;}
   if(e==='rotCW'||e==='rotCCW'){const i=MODES.indexOf(rk.mode);rk.note='';rk.mode=MODES[(i+(e==='rotCW'?1:MODES.length-1))%MODES.length];sfx.move();rkRender();return;}
@@ -923,7 +924,7 @@ document.querySelectorAll('#rkModes button').forEach(b=>b.addEventListener('clic
 document.querySelectorAll('#rkWhere button').forEach(b=>b.addEventListener('click',()=>{sfx.move();rkShow(b.dataset.w);}));
 $('rkSave').onclick=rkSave;$('rkSkip').onclick=rkSkip;$('rkClose').onclick=()=>{rkClose();sfx.ui();};
 $('rkIn').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();rkSave();}else if(e.key==='Escape')rkSkip();});
-$('rk').addEventListener('pointerdown',e=>{if(e.target===$('rk'))rkClose();}); // 点外面关掉
+$('rk').addEventListener('pointerdown',e=>{if(e.target===$('rk')&&$('rkName').hidden)rkClose();}); // 点外面关掉（输名字时不会误关）
 
 /* ---------- 事件处理 ---------- */
 function handle(e){
@@ -955,7 +956,7 @@ function handle(e){
       if(o==='CONTINUE'){state=pauseFrom;sfx.ui();if(vs.on)vsSend({t:'resume'});}
       else if(o==='GIVE UP'){vsSend({t:'resume'});state=pauseFrom;gameOver();} // 认输时先让大家继续
       else{if(score>hi){hi=score;store.set(HI_KEYS[mode],String(hi));}
-        if(o==='RESTART')startGame();else{state='title';cur=null;sfx.ui();}}
+        if(o==='RESTART')startGame();else{if(score>0)rkLater();state='title';cur=null;sfx.ui();}}
     }
     return;
   }
