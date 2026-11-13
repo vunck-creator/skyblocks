@@ -1,0 +1,4 @@
+# 网站就是根目录的 index.html；全网排行榜用 netlify/functions/scores.mjs
+[build]
+  publish = "."
+  functions = "netlify/functions"
