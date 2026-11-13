@@ -821,7 +821,7 @@ document.querySelectorAll('[data-share]').forEach(b=>{
 
 /* ---------- 🏆 排行榜：本机 Top 10 + 全网 Top 50（每个模式各一份） ---------- */
 // 全网榜放在 Netlify 网站自己的 /api/scores；离线 HTML / Claude 网页版就去问 RANK_SITE
-const RANK_SITE='';
+const RANK_SITE='https://skyblock1990.netlify.app';
 const RANK_APIS=[...(/^https?:$/.test(location.protocol)?['/api/scores']:[]),...(RANK_SITE?[RANK_SITE.replace(/\/$/,'')+'/api/scores']:[])];
 const RK_LOCAL=10,RK_NET=50;
 const rk={note:'',mode:'noob',where:'net',net:null,netT:0,api:null,hl:null,entry:null,emode:null,busy:false};
@@ -837,7 +837,7 @@ async function rkFetch(body){
   const apis=rk.api?[rk.api]:RANK_APIS;
   for(const u of apis){
     try{
-      const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),6000);
+      const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),4000);
       const r=await fetch(u,body?{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body),signal:ctl.signal}:{signal:ctl.signal,cache:'no-store'});
       clearTimeout(t);
       const j=await r.json();if(!r.ok&&!j.error)throw 0;rk.api=u;return j;
