@@ -24,18 +24,34 @@ button.alt{background:linear-gradient(#5fd0ff,#2077c4);box-shadow:0 4px 0 #0d3a6
 #help.show{display:block}
 #help .x{display:block;margin-top:8px;color:#ff9ad0;font-weight:bold}
 #help b{color:#ffd23f}
-#vs{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:rgba(5,4,15,.82);padding:12px;box-sizing:border-box;user-select:text;-webkit-user-select:text;touch-action:auto}
-#vs[hidden],#vs [hidden]{display:none!important}
-#vs .box{width:100%;max-width:420px;max-height:100%;overflow:auto;border-radius:14px;padding:14px;box-sizing:border-box;background:linear-gradient(#2c1f73,#140d3c);box-shadow:0 0 0 3px #5fd0ff,0 0 24px rgba(95,208,255,.5)}
-#vs h2{margin:0 0 8px;color:#ffd23f;font-size:20px;text-align:center}
-#vs p{margin:6px 0;font-size:14px;line-height:1.5;color:#cfc8ff}
-#vs p b{color:#ffd23f}
-#vs textarea{width:100%;box-sizing:border-box;height:70px;border-radius:8px;border:2px solid #5fd0ff;background:#0b0828;color:#4dff7a;font:12px/1.3 "Courier New",monospace;padding:6px;resize:none;word-break:break-all;user-select:text;-webkit-user-select:text}
-#vs .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:6px 0 10px}
-#vs .row button{font-size:15px;padding:8px 12px}
-#vs .key{display:block;width:100%;box-sizing:border-box;text-align:center;font:bold 34px/1.2 "Courier New",monospace;letter-spacing:8px;color:#ffd23f;background:#0b0828;border:2px solid #ffd23f;border-radius:10px;padding:8px 0;text-transform:uppercase}
-#vs .link{background:none;box-shadow:none;color:#5fd0ff;text-decoration:underline;font-size:13px;padding:4px}
+:is(#vs,#rk){position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:rgba(5,4,15,.82);padding:12px;box-sizing:border-box;user-select:text;-webkit-user-select:text;touch-action:auto}
+#vs[hidden],#vs [hidden],#rk[hidden],#rk [hidden]{display:none!important}
+:is(#vs,#rk) .box{width:100%;max-width:420px;max-height:100%;overflow:auto;border-radius:14px;padding:14px;box-sizing:border-box;background:linear-gradient(#2c1f73,#140d3c);box-shadow:0 0 0 3px #5fd0ff,0 0 24px rgba(95,208,255,.5)}
+:is(#vs,#rk) h2{margin:0 0 8px;color:#ffd23f;font-size:20px;text-align:center}
+:is(#vs,#rk) p{margin:6px 0;font-size:14px;line-height:1.5;color:#cfc8ff}
+:is(#vs,#rk) p b{color:#ffd23f}
+:is(#vs,#rk) textarea{width:100%;box-sizing:border-box;height:70px;border-radius:8px;border:2px solid #5fd0ff;background:#0b0828;color:#4dff7a;font:12px/1.3 "Courier New",monospace;padding:6px;resize:none;word-break:break-all;user-select:text;-webkit-user-select:text}
+:is(#vs,#rk) .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:6px 0 10px}
+:is(#vs,#rk) .row button{font-size:15px;padding:8px 12px}
+:is(#vs,#rk) .key{display:block;width:100%;box-sizing:border-box;text-align:center;font:bold 34px/1.2 "Courier New",monospace;letter-spacing:8px;color:#ffd23f;background:#0b0828;border:2px solid #ffd23f;border-radius:10px;padding:8px 0;text-transform:uppercase}
+:is(#vs,#rk) .link{background:none;box-shadow:none;color:#5fd0ff;text-decoration:underline;font-size:13px;padding:4px}
 #vsNote{color:#ffd23f!important}
+#rk .tabs{display:flex;gap:4px;justify-content:center;margin:4px 0}
+#rk .tabs button{flex:1;font-size:13px;padding:6px 4px;background:#2a2160;box-shadow:0 3px 0 #0b0828;color:#9a93c8}
+#rk .tabs button.sel{background:linear-gradient(#ff5fb4,#c4207a);color:#fff;box-shadow:0 3px 0 #6e0d42}
+#rk table{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0}
+#rk td{padding:3px 4px;border-bottom:1px solid #2a2160;white-space:nowrap}
+#rk td:nth-child(1){color:#9a93c8;width:2em;text-align:right}
+#rk td:nth-child(2){color:#fff;overflow:hidden;text-overflow:ellipsis;max-width:9em}
+#rk td:nth-child(3){color:#ffd23f;text-align:right;font-weight:bold}
+#rk td:nth-child(4),#rk td:nth-child(5){color:#9a93c8;text-align:right;font-size:12px}
+#rk tr.me td{background:rgba(255,63,164,.35);color:#fff}
+#rk tr:nth-child(1) td:nth-child(1){color:#ffd23f}
+#rk .list{max-height:min(52vh,330px);overflow:auto}
+#rk .big{font:bold 26px/1.2 "Courier New",monospace;color:#ffd23f;text-align:center;margin:4px 0}
+#rk input.key{font-size:24px;letter-spacing:2px}
+#rkMsg{text-align:center;color:#ff9ad0!important;min-height:18px}
+@media (max-width:380px){#rk td:nth-child(5),#rk th:nth-child(5){display:none}}
 #vsMsg{min-height:20px;text-align:center;color:#ff9ad0!important;font-weight:bold}
 </style>
 </head>
@@ -48,6 +64,7 @@ button.alt{background:linear-gradient(#5fd0ff,#2077c4);box-shadow:0 4px 0 #0d3a6
     <button class="alt" data-e="mute" data-zh="🔊 声音" data-en="🔊 SOUND">🔊 声音</button>
     <button class="alt" data-e="lang" data-zh="🌐 EN" data-en="🌐 中文">🌐 EN</button>
     <button data-e="vs" data-zh="⚔ 联机对战" data-en="⚔ VS ONLINE">⚔ 联机对战</button>
+    <button data-e="rank" data-zh="🏆 排行榜" data-en="🏆 RANKING">🏆 排行榜</button>
     <button class="alt" id="helpBtn" data-zh="❓ 说明" data-en="❓ HELP">❓ 说明</button>
   </div>
   <div id="pad">
@@ -60,8 +77,26 @@ button.alt{background:linear-gradient(#5fd0ff,#2077c4);box-shadow:0 4px 0 #0d3a6
       <button data-e="rotCW" style="margin-bottom:34px">A<br>⟳</button>
     </div>
   </div>
-  <div id="help" data-zh="<b>标题画面</b>：A D / 十字键 / ◀▶ 选起始关卡 · W S / ↑ / 十字键上下 / ▼ 换难度（菜鸟 / 简单 / 普通 / 经典） · L 或 🌐 切换中/英（手柄：标题画面按 B/X）<br><b>键盘</b>：A D 移动 · S 加速 · → 顺转 · ← 逆转 · Enter 开始 · P 暂停（暂停时 W S 选 继续 / 重新开始 / 回主画面，Enter 确定） · G 影子开关 · M 声音 · V 联机对战<br><b>鼠标</b>：方块跟着鼠标左右走 · 左键 顺转 · 右键 逆转· 标题画面左键开始<br><b>手机手势</b>：左右拖 移动 · 轻点 顺转 · 往上划 逆转 · 按住往下拖 加速 · 标题画面左右划选关卡、上下划换难度、轻点开始<br><b>联机对战</b>：按 ⚔ 联机对战，房主「建房」把 6 位密钥发给朋友，朋友「加入」输入密钥。最多 3 人。一次消 2 行以上（或连锁）会送垃圾行，两个对手平分。<br><b>Xbox 手柄</b>：十字键/摇杆 移动 · A 顺转 · B/X 逆转 · Start 开始/暂停（暂停时 十字键上下 选 继续 / 重新开始 / 回主画面）· Y 影子开关<span class='x'>✖ 点一下或按 H 关闭</span>"
-    data-en="<b>Title screen</b>: A D / D-pad / ◀▶ pick start level · W S / ↑ / D-pad up-down / ▼ change mode (Noob / Easy / Normal / Classic) · L or 🌐 switch 中/EN (pad: B/X on title)<br><b>Keyboard</b>: A D move · S soft drop · → rotate CW · ← rotate CCW · Enter start · P pause (in pause: W S pick Continue / Restart / Menu, Enter to confirm) · G ghost · M sound · V online VS<br><b>Mouse</b>: piece follows the mouse left/right · left click rotate CW · right click rotate CCW · left click on title to start<br><b>Touch</b>: drag left/right move · tap rotate CW · swipe up rotate CCW · hold & drag down soft drop · on title swipe ◀▶ level, ▲▼ mode, tap to start<br><b>Online VS</b>: tap ⚔ VS ONLINE, host CREATEs a room and sends the 6-letter key, friend JOINs with it. Up to 3 players. Clearing 2+ lines (or chains) sends garbage rows, split between your rivals.<br><b>Xbox pad</b>: D-pad/stick move · A rotate CW · B/X rotate CCW · Start start/pause (in pause: D-pad up/down → Continue / Restart / Menu) · Y ghost<span class='x'>✖ Click or press H to close</span>"></div>
+  <div id="help" data-zh="<b>标题画面</b>：A D / 十字键 / ◀▶ 选起始关卡 · W S / ↑ / 十字键上下 / ▼ 换难度（菜鸟 / 简单 / 普通 / 经典） · L 或 🌐 切换中/英（手柄：标题画面按 B/X）<br><b>键盘</b>：A D 移动 · S 加速 · → 顺转 · ← 逆转 · Enter 开始 · P 暂停（暂停时 W S 选 继续 / 重新开始 / 回主画面，Enter 确定） · G 影子开关 · M 声音 · V 联机对战 · R 排行榜<br><b>鼠标</b>：方块跟着鼠标左右走 · 左键 顺转 · 右键 逆转· 标题画面左键开始<br><b>手机手势</b>：左右拖 移动 · 轻点 顺转 · 往上划 逆转 · 按住往下拖 加速 · 标题画面左右划选关卡、上下划换难度、轻点开始<br><b>联机对战</b>：按 ⚔ 联机对战，房主「建房」把 6 位密钥发给朋友，朋友「加入」输入密钥。最多 3 人。一次消 2 行以上（或连锁）会送垃圾行，两个对手平分。<br><b>Xbox 手柄</b>：十字键/摇杆 移动 · A 顺转 · B/X 逆转 · Start 开始/暂停（暂停时 十字键上下 选 继续 / 重新开始 / 回主画面）· Y 影子开关<span class='x'>✖ 点一下或按 H 关闭</span>"
+    data-en="<b>Title screen</b>: A D / D-pad / ◀▶ pick start level · W S / ↑ / D-pad up-down / ▼ change mode (Noob / Easy / Normal / Classic) · L or 🌐 switch 中/EN (pad: B/X on title)<br><b>Keyboard</b>: A D move · S soft drop · → rotate CW · ← rotate CCW · Enter start · P pause (in pause: W S pick Continue / Restart / Menu, Enter to confirm) · G ghost · M sound · V online VS · R ranking<br><b>Mouse</b>: piece follows the mouse left/right · left click rotate CW · right click rotate CCW · left click on title to start<br><b>Touch</b>: drag left/right move · tap rotate CW · swipe up rotate CCW · hold & drag down soft drop · on title swipe ◀▶ level, ▲▼ mode, tap to start<br><b>Online VS</b>: tap ⚔ VS ONLINE, host CREATEs a room and sends the 6-letter key, friend JOINs with it. Up to 3 players. Clearing 2+ lines (or chains) sends garbage rows, split between your rivals.<br><b>Xbox pad</b>: D-pad/stick move · A rotate CW · B/X rotate CCW · Start start/pause (in pause: D-pad up/down → Continue / Restart / Menu) · Y ghost<span class='x'>✖ Click or press H to close</span>"></div>
+</div>
+<div id="rk" hidden>
+  <div class="box">
+    <h2 data-zh="🏆 排行榜" data-en="🏆 RANKING">🏆 排行榜</h2>
+    <div id="rkName" hidden>
+      <p style="text-align:center" data-zh="上榜了！🎉 留下你的大名" data-en="You made the board! 🎉 Enter your name">上榜了！🎉 留下你的大名</p>
+      <div class="big" id="rkScore"></div>
+      <input id="rkIn" class="key" maxlength="10" autocomplete="off" spellcheck="false" placeholder="NAME">
+      <div class="row"><button id="rkSave" data-zh="✔ 保存" data-en="✔ SAVE">✔ 保存</button><button class="alt" id="rkSkip" data-zh="跳过" data-en="SKIP">跳过</button></div>
+    </div>
+    <div id="rkView">
+      <div class="tabs" id="rkWhere"><button data-w="net" data-zh="🌍 全网" data-en="🌍 WORLD">🌍 全网</button><button data-w="local" data-zh="📱 本机" data-en="📱 THIS DEVICE">📱 本机</button></div>
+      <div class="tabs" id="rkModes"><button data-m="noob" data-zh="菜鸟" data-en="NOOB">菜鸟</button><button data-m="easy" data-zh="简单" data-en="EASY">简单</button><button data-m="normal" data-zh="普通" data-en="NORMAL">普通</button><button data-m="classic" data-zh="经典" data-en="CLASSIC">经典</button></div>
+      <div class="list"><table id="rkList"></table></div>
+    </div>
+    <p id="rkMsg"></p>
+    <div class="row"><button class="alt" id="rkClose" data-zh="✖ 关闭" data-en="✖ CLOSE">✖ 关闭</button></div>
+  </div>
 </div>
 <div id="vs" hidden>
   <div class="box">
@@ -210,9 +245,9 @@ const kHeld={left:false,right:false,down:false},pHeld={left:false,right:false,do
 const queue=[];
 const held=k=>kHeld[k]||pHeld[k]||tHeld[k];
 const KMAP_H={a:'left',A:'left',d:'right',D:'right',s:'down',S:'down'};
-const KMAP_E={ArrowRight:'rotCW',ArrowLeft:'rotCCW',ArrowUp:'up',w:'up',W:'up',x:'rotCW',X:'rotCW',z:'rotCCW',Z:'rotCCW',Enter:'start',' ':'start',p:'pause',P:'pause',Escape:'pause',m:'mute',M:'mute',g:'ghost',G:'ghost',l:'lang',L:'lang',h:'help',H:'help',v:'vs',V:'vs'};
+const KMAP_E={ArrowRight:'rotCW',ArrowLeft:'rotCCW',ArrowUp:'up',w:'up',W:'up',x:'rotCW',X:'rotCW',z:'rotCCW',Z:'rotCCW',Enter:'start',' ':'start',p:'pause',P:'pause',Escape:'pause',m:'mute',M:'mute',g:'ghost',G:'ghost',l:'lang',L:'lang',h:'help',H:'help',v:'vs',V:'vs',r:'rank',R:'rank'};
 addEventListener('keydown',e=>{
-  if(e.target&&e.target.closest&&e.target.closest('#vs'))return;
+  if(e.target&&e.target.closest&&e.target.closest('#vs,#rk'))return;
   if(KMAP_H[e.key]){kHeld[KMAP_H[e.key]]=true;e.preventDefault();}
   else if(KMAP_E[e.key]){e.preventDefault();if(!e.repeat)queue.push(KMAP_E[e.key]);}
 });
@@ -230,7 +265,7 @@ document.querySelectorAll('[data-e]').forEach(b=>{
 const mouse={on:false,col:-1};
 function mouseCol(e){const r=cv.getBoundingClientRect();const gx=(e.clientX-r.left)/r.width*W;return Math.max(0,Math.min(COLS-1,Math.floor((gx-BX-(PORT?PDX:0))/CELL)));}
 addEventListener('pointermove',e=>{
-  if(e.pointerType!=='mouse'||!document.getElementById('vs').hidden)return;
+  if(e.pointerType!=='mouse'||!document.getElementById('vs').hidden||!document.getElementById('rk').hidden)return;
   const c=mouseCol(e);if(c!==mouse.col){mouse.col=c;mouse.on=true;} // 鼠标真的换了列才接管，碰一下不会抢键盘
 });
 const cab=document.getElementById('cab');
@@ -247,7 +282,7 @@ const TOUCH_UI=matchMedia('(pointer:coarse)').matches;
 const touch={axis:null,slide:false,on:false,id:null,x:0,y:0,x0:0,y0:0,t0:0,colPx:24,piece:null,baseX:0,soft:false};
 addEventListener('pointerdown',e=>{
   if(e.pointerType==='mouse'||touch.id!==null)return;
-  if(e.target.closest&&e.target.closest('button,#vs,#help,input,textarea'))return;
+  if(e.target.closest&&e.target.closest('button,#vs,#rk,#help,input,textarea'))return;
   e.preventDefault();audioInit();
   const r=cv.getBoundingClientRect();
   Object.assign(touch,{id:e.pointerId,x:e.clientX,y:e.clientY,x0:e.clientX,y0:e.clientY,t0:performance.now(),axis:null,colPx:Math.max(22,r.width/W*CELL*(PORT?1.1:1.5)),piece:null,soft:false});
@@ -386,6 +421,7 @@ function gameOver(){
     if(vs.host)vsBcast({t:'out',id:0});else vsSend({t:'lose'});vsOut(vs.me);}
   state='over';overT=0;sfx.over();
   if(!vs.on&&score>hi){hi=score;store.set(HI_KEYS[mode],String(hi));toast('NEW HI-SCORE!');} // 联机对战不算最高分
+  if(!vs.on&&score>0){const en={s:score,ln:lines,lv:level},m=mode;setTimeout(()=>{if(state==='over')rkOffer(m,en);},1000);} // 单人：上榜就问名字
 }
 function tryMove(dx){if(!collide(cur.m,cur.x+dx,cur.y)){cur.x+=dx;sfx.move();return true;}return false;}
 // 转不过去时依次试这些位置（dx, dy，dy 正数 = 往下）：先原地，再左右挪一格，再往下塞一两格。
@@ -783,14 +819,121 @@ document.querySelectorAll('[data-share]').forEach(b=>{
     try{await navigator.share({text:v});}catch(e){}};
 });
 
+/* ---------- 🏆 排行榜：本机 Top 10 + 全网 Top 50（每个模式各一份） ---------- */
+// 全网榜放在 Netlify 网站自己的 /api/scores；离线 HTML / Claude 网页版就去问 RANK_SITE
+const RANK_SITE='';
+const RANK_APIS=[...(/^https?:$/.test(location.protocol)?['/api/scores']:[]),...(RANK_SITE?[RANK_SITE.replace(/\/$/,'')+'/api/scores']:[])];
+const RK_LOCAL=10,RK_NET=50;
+const rk={note:'',mode:'noob',where:'net',net:null,netT:0,api:null,hl:null,entry:null,emode:null,busy:false};
+const rkKeyOf=m=>'skyblocks_rank_'+m+'_v1';
+function rkLocal(m){
+  let l;try{l=JSON.parse(store.get(rkKeyOf(m))||'null');}catch(e){l=null;}
+  return Array.isArray(l)?l.filter(e=>e&&e.s>0):[];
+}
+MODES.forEach(m=>{if(store.get(rkKeyOf(m))===null){const h=parseInt(store.get(HI_KEYS[m])||'0',10)||0; // 第一次：以前的最高分先放进本机榜
+  store.set(rkKeyOf(m),JSON.stringify(h>0?[{n:'???',s:h,ln:0,lv:0,d:''}]:[]));}});
+const rkQual=(l,s,max)=>l.length<max||s>l[l.length-1].s;
+async function rkFetch(body){
+  const apis=rk.api?[rk.api]:RANK_APIS;
+  for(const u of apis){
+    try{
+      const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),6000);
+      const r=await fetch(u,body?{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body),signal:ctl.signal}:{signal:ctl.signal,cache:'no-store'});
+      clearTimeout(t);
+      const j=await r.json();if(!r.ok&&!j.error)throw 0;rk.api=u;return j;
+    }catch(e){}
+  }
+  throw new Error('net');
+}
+async function rkLoadNet(force){
+  if(!force&&rk.net&&performance.now()-rk.netT<30000)return rk.net;
+  const j=await rkFetch();if(!j||!Array.isArray(j.noob))throw new Error('net');
+  rk.net=j;rk.netT=performance.now();return j;
+}
+function rkRender(){
+  document.querySelectorAll('#rkWhere button').forEach(b=>b.classList.toggle('sel',b.dataset.w===rk.where));
+  document.querySelectorAll('#rkModes button').forEach(b=>b.classList.toggle('sel',b.dataset.m===rk.mode));
+  const t=$('rkList');t.textContent='';
+  let l,msg='';
+  if(rk.where==='local')l=rkLocal(rk.mode);
+  else if(!RANK_APIS.length){l=[];msg=L('全网榜要在网站版才看得到 🌐','The world board only works on the website 🌐');}
+  else if(!rk.net){l=[];msg=rk.busy?L('载入中…','Loading…'):L('连不上排行榜服务器 😵','Can\'t reach the ranking server 😵');}
+  else l=rk.net[rk.mode]||[];
+  if(!msg&&rk.note)msg=rk.note;
+  if(!msg&&!l.length)msg=L('还没有人上榜，第一名等你来拿 👑','Nobody here yet. First place is yours 👑');
+  const hl=rk.hl&&rk.hl.where===rk.where&&rk.hl.mode===rk.mode?rk.hl.i:-1;
+  l.forEach((e,i)=>{
+    const tr=t.insertRow();if(i===hl)tr.className='me';
+    [i<3?['🥇','🥈','🥉'][i]:i+1,e.n,e.s,e.ln?e.ln+L(' 行',' L'):'',e.d?e.d.slice(2):''].forEach(v=>{tr.insertCell().textContent=v;});
+  });
+  $('rkMsg').textContent=msg;
+  if(hl>=0){const r=t.rows[hl];if(r)r.scrollIntoView({block:'nearest'});}
+}
+async function rkShow(where,m,note){
+  rk.note=note||'';
+  rk.where=where||rk.where;rk.mode=m||rk.mode;
+  $('rkName').hidden=true;$('rkView').hidden=false;$('rk').hidden=false;rkRender();
+  if(rk.where==='net'&&RANK_APIS.length){rk.busy=!rk.net;rkRender();try{await rkLoadNet();}catch(e){}rk.busy=false;rkRender();}
+}
+function rkPause(){if(GAME_STATES.includes(state)){pauseFrom=state;state='pause';if(vs.on)vsSend({t:'pause'});}}
+function rkOpen(){rkPause();rk.hl=null;rkShow(RANK_APIS.length?rk.where:'local',mode);}
+function rkClose(){if(!$('rkName').hidden){rkSkip();return;}$('rk').hidden=true;try{document.activeElement.blur();}catch(e){}}
+// 游戏结束：本机前 10 或全网前 50 就问名字
+async function rkOffer(m,en){
+  let net=false;
+  if(RANK_APIS.length){try{const j=await rkLoadNet(true);net=rkQual(j[m]||[],en.s,RK_NET);}catch(e){}}
+  const loc=rkQual(rkLocal(m),en.s,RK_LOCAL);
+  if(!loc&&!net)return;
+  if(state!=='over'||!$('rk').hidden||!$('vs').hidden)return;
+  rk.entry=en;rk.emode=m;rk.hl=null;
+  $('rkScore').textContent=String(en.s).padStart(7,'0');
+  $('rkIn').value=store.get('skyblocks_name_v1')||'';
+  $('rkView').hidden=true;$('rkName').hidden=false;$('rkMsg').textContent='';$('rk').hidden=false;
+  if(!TOUCH_UI)setTimeout(()=>{try{$('rkIn').focus();$('rkIn').select();}catch(e){}},50); // 手机不自动弹键盘
+  sfx.level();
+}
+function rkSkip(){rk.entry=null;$('rk').hidden=true;try{document.activeElement.blur();}catch(e){}}
+async function rkSave(){
+  const en=rk.entry,m=rk.emode;if(!en)return;rk.entry=null;
+  const n=($('rkIn').value||'').replace(/[\u0000-\u001f<>]/g,'').replace(/\s+/g,' ').trim().slice(0,10)||'???';
+  store.set('skyblocks_name_v1',n);try{$('rkIn').blur();}catch(e){}
+  const e={n,s:en.s,ln:en.ln,lv:en.lv,d:new Date().toISOString().slice(0,10)};
+  const l=rkLocal(m);let li=-1;
+  if(rkQual(l,e.s,RK_LOCAL)){l.push(e);l.sort((a,b)=>b.s-a.s);l.length=Math.min(l.length,RK_LOCAL);li=l.indexOf(e);store.set(rkKeyOf(m),JSON.stringify(l));}
+  rk.hl=li>=0?{where:'local',mode:m,i:li}:null;
+  if(!RANK_APIS.length){sfx.ui();rkShow('local',m);return;}
+  rk.busy=true;rk.where='net';rk.mode=m;rk.net=rk.net||null;
+  $('rkName').hidden=true;$('rkView').hidden=false;rkRender();$('rkMsg').textContent=L('上传中…','Uploading…');
+  try{
+    const j=await rkFetch({mode:m,n,s:e.s,ln:e.ln,lv:e.lv});
+    if(j.error)throw new Error(j.error);
+    if(rk.net)rk.net[m]=j.list;else{try{await rkLoadNet(true);}catch(_){} if(rk.net)rk.net[m]=j.list;}
+    if(j.rank)rk.hl={where:'net',mode:m,i:j.rank-1};
+    rk.busy=false;sfx.start();rkShow('net',m,j.rank?L('全网第 '+j.rank+' 名！🎉','World rank #'+j.rank+'! 🎉'):L('这次没挤进全网前 50，再接再厉 💪','Not in the world top 50 this time 💪'));
+  }catch(err){rk.busy=false;rkShow(li>=0?'local':'net',m,L('上传失败，先记在本机了 😵','Upload failed, saved on this device 😵'));}
+}
+// 排行榜开着时的按键：A/Start 保存或关闭，◀▶/A/B 换模式
+function rkKey(e){
+  if(!$('rkName').hidden){if(e==='start'||e==='rotCW')rkSave();else if(e==='pause'||e==='rotCCW')rkSkip();return;}
+  if(e==='start'||e==='pause'){rkClose();sfx.ui();return;}
+  if(e==='rotCW'||e==='rotCCW'){const i=MODES.indexOf(rk.mode);rk.note='';rk.mode=MODES[(i+(e==='rotCW'?1:MODES.length-1))%MODES.length];sfx.move();rkRender();return;}
+  if(e==='up'&&RANK_APIS.length){rkShow(rk.where==='net'?'local':'net');sfx.move();}
+}
+document.querySelectorAll('#rkModes button').forEach(b=>b.addEventListener('click',()=>{rk.note='';rk.mode=b.dataset.m;sfx.move();rkRender();}));
+document.querySelectorAll('#rkWhere button').forEach(b=>b.addEventListener('click',()=>{sfx.move();rkShow(b.dataset.w);}));
+$('rkSave').onclick=rkSave;$('rkSkip').onclick=rkSkip;$('rkClose').onclick=()=>{rkClose();sfx.ui();};
+$('rkIn').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();rkSave();}else if(e.key==='Escape')rkSkip();});
+$('rk').addEventListener('pointerdown',e=>{if(e.target===$('rk'))rkClose();}); // 点外面关掉
+
 /* ---------- 事件处理 ---------- */
 function handle(e){
   audioInit();
   if(e==='mute'){muted=!muted;toast(muted?'SOUND OFF':'SOUND ON');return;}
   if(e==='ghost'){ghostOn=!ghostOn;store.set('skyblocks_ghost_v1',ghostOn?'1':'0');toast(ghostOn?'GHOST ON':'GHOST OFF');sfx.ui();return;}
-  if(e==='lang'){lang=lang==='zh'?'en':'zh';store.set('skyblocks_lang_v1',lang);applyLang();toast(lang==='zh'?'中文':'ENGLISH');sfx.ui();return;}
+  if(e==='lang'){lang=lang==='zh'?'en':'zh';store.set('skyblocks_lang_v1',lang);applyLang();if(!$('rk').hidden&&!$('rkView').hidden)rkRender();toast(lang==='zh'?'中文':'ENGLISH');sfx.ui();return;}
   if(e==='vs'){openVs();sfx.ui();return;}
   if(e==='help'){toggleHelp();return;}
+  if(e==='rank'){if($('rk').hidden)rkOpen();else rkClose();sfx.ui();return;}
   if(e==='__vsopen'){toast('CONNECTED!');vsMsg(L('连上了！🎉','Connected! 🎉'));sfx.start();vsUpdOn();if(!$('vs').hidden)showVs('vsOn');return;}
   if(e.startsWith('__vsjoin:')){toast('P'+(+e.slice(9)+1)+' JOINED!');vsMsg(L('有人进来了！🎉','Someone joined! 🎉'));sfx.start();vsUpdOn();if(!$('vs').hidden)showVs('vsOn');return;}
   if(e.startsWith('__vsdrop')){
@@ -803,6 +946,7 @@ function handle(e){
     }
     vsLeave();toast('DISCONNECTED');sfx.over();if(!$('vs').hidden)showVs('vsHome');return;
   }
+  if(!$('rk').hidden){rkKey(e);return;} // 排行榜开着：按键给它
   if(state==='pause'){ // 暂停菜单：继续 / 重新开始 / 回主画面
     if(e==='up'){pauseSel=(pauseSel+PAUSE_OPTS.length-1)%PAUSE_OPTS.length;sfx.move();}
     else if(e==='pause'){state=pauseFrom;sfx.ui();if(vs.on)vsSend({t:'resume'});}
@@ -1131,7 +1275,7 @@ function loop(t){
   draw();requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
-window.__sb={vs,addGarbage,get lang(){return lang},get state(){return state},get level(){return level},get startLevel(){return startLevel},get score(){return score},get lines(){return lines},get board(){return board},get ids(){return ids},get mode(){return mode},get pauseSel(){return pauseSel},setMode,get cur(){return cur},tick,queue,kHeld};
+window.__sb={vs,addGarbage,get lang(){return lang},get state(){return state},get level(){return level},get startLevel(){return startLevel},get score(){return score},set score(v){score=v},get lines(){return lines},set lines(v){lines=v},gameOver,get board(){return board},get ids(){return ids},get mode(){return mode},get pauseSel(){return pauseSel},setMode,get cur(){return cur},tick,queue,kHeld};
 })();
 </script>
 </body>
