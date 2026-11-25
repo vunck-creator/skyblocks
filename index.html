@@ -361,7 +361,7 @@ const ZH={'ARCADE PUZZLE  -  1990 STYLE':'街机益智 · 1990 风格','PRESS ST
  'ALL BLOCKS FALL INTO HOLES':'全部方块往下掉 · 填满空洞',
  'GIVE UP':'认输','MATCH IN PROGRESS':'还有人在打，等一下','YOU':'你','YOU WIN!':'你赢了！','YOU LOSE':'你输了','RIVAL':'对手','WINS':'战绩','VS MODE':'联机对战','CONNECTED!':'连上了！',
  'DISCONNECTED':'对手断线了','WAITING FOR HOST':'等房主按 START','HOST: ◀▶ LEVEL · ▲▼ MODE':'房主：◀▶ 选关 · ▲▼ 难度',
- 'RIVAL LEFT - YOU WIN!':'对手认输，你赢了！','GO!':'开打！','PRESS START TO FIGHT':'按 START 开打','SEND':'送出','INCOMING':'来袭','CLEARED PIECES BREAK APART':'被消到的方块散开 · 各自往下掉','CLEARED PIECES FALL AS ONE':'被消到的方块整块往下掉','ORIGINAL BLOCK RULES':'原汁原味 · 不填空洞'};
+ 'RIVAL LEFT - YOU WIN!':'对手认输，你赢了！','GO!':'开打！','PRESS START TO FIGHT':'按 START 开打','SEND':'送出','INCOMING':'来袭','CLEARED PIECES BREAK APART':'被消到的方块散开 · 各自往下掉','CLEARED PIECES FALL AS ONE':'被消到的方块整块往下掉','ORIGINAL BLOCK RULES':'原汁原味 · 不填空洞','DEMO':'演示'};
 function tr(s){
   if(lang!=='zh')return s;
   if(ZH[s]!==undefined)return ZH[s];
@@ -468,62 +468,95 @@ function checkLines(){
   state='clear';clearT=24;
   return true;
 }
-// 消行后的下落：按模式不同
-function fallStep(){
-  if(mode==='noob'){ // Joy Joy Kid 式：每格各自往下掉，填满空洞
+// 消行后的下落：按模式不同。b/ids/fs/m 都当参数传进来，标题画面的演示小棋盘也用同一套规则
+function settle(b,ids,fs,m){
+  const R=b.length,C=b[0].length;
+  if(m==='noob'){ // Joy Joy Kid 式：每格各自往下掉，填满空洞
     let moved=false;
-    for(let y=ROWS-2;y>=0;y--)for(let x=0;x<COLS;x++){
-      if(board[y][x]&&!board[y+1][x]){board[y+1][x]=board[y][x];ids[y+1][x]=ids[y][x];board[y][x]=null;ids[y][x]=null;moved=true;}
+    for(let y=R-2;y>=0;y--)for(let x=0;x<C;x++){
+      if(b[y][x]&&!b[y+1][x]){b[y+1][x]=b[y][x];ids[y+1][x]=ids[y][x];b[y][x]=null;ids[y][x]=null;moved=true;}
     }
     return moved;
   }
-  if(mode==='normal'||mode==='easy'){ // 被消到的方块碎片往下掉一格（easy：每格是一个碎片；normal：连在一起的是一整块）
+  if(m==='normal'||m==='easy'){ // 被消到的方块碎片往下掉一格（easy：每格是一个碎片；normal：连在一起的是一整块）
     const comps=new Map();
-    for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){
-      const id=ids[y][x];if(id==null||!fallSet.has(id))continue;
+    for(let y=0;y<R;y++)for(let x=0;x<C;x++){
+      const id=ids[y][x];if(id==null||!fs.has(id))continue;
       if(!comps.has(id))comps.set(id,[]);comps.get(id).push([y,x]);
     }
     const list=[...comps.entries()].sort((p,q)=>Math.max(...q[1].map(c=>c[0]))-Math.max(...p[1].map(c=>c[0])));
     let moved=false;
     for(const [id,cs] of list){
-      if(!cs.every(([y,x])=>y+1<ROWS&&(!board[y+1][x]||ids[y+1][x]===id)))continue;
-      const ks=cs.map(([y,x])=>board[y][x]);
-      cs.forEach(([y,x])=>{board[y][x]=null;ids[y][x]=null;});
-      cs.forEach(([y,x],i)=>{board[y+1][x]=ks[i];ids[y+1][x]=id;});
+      if(!cs.every(([y,x])=>y+1<R&&(!b[y+1][x]||ids[y+1][x]===id)))continue;
+      const ks=cs.map(([y,x])=>b[y][x]);
+      cs.forEach(([y,x])=>{b[y][x]=null;ids[y][x]=null;});
+      cs.forEach(([y,x],i)=>{b[y+1][x]=ks[i];ids[y+1][x]=id;});
       moved=true;
     }
     return moved;
   }
   return false; // classic：不填空洞
 }
-function removeRows(){
+function fallStep(){return settle(board,ids,fallSet,mode);}
+// 拿掉消掉的行（直接改 b、ids 这两个数组本身）
+function cutRows(b,ids,fs,m,rows){
+  const R=b.length,C=b[0].length;
   // 先像经典规则一样：消掉的行拿走，上面的整体下沉
   const hit=new Set();
-  if(mode==='normal'||mode==='easy')for(const y of clearRows)for(let x=0;x<COLS;x++)if(ids[y][x]!=null)hit.add(ids[y][x]);
-  board=board.filter((_,i)=>!clearRows.includes(i));
-  ids=ids.filter((_,i)=>!clearRows.includes(i));
-  while(board.length<ROWS){board.unshift(Array(COLS).fill(null));ids.unshift(Array(COLS).fill(null));}
-  if(mode==='easy'){
+  if(m==='normal'||m==='easy')for(const y of rows)for(let x=0;x<C;x++)if(ids[y][x]!=null)hit.add(ids[y][x]);
+  [...rows].sort((p,q)=>q-p).forEach(y=>{b.splice(y,1);ids.splice(y,1);});
+  while(b.length<R){b.unshift(Array(C).fill(null));ids.unshift(Array(C).fill(null));}
+  if(m==='easy'){
     // 简单模式：被消到的方块结构被破坏，剩下的每一格都变成独立的碎片，各自往下掉
-    for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)if(ids[y][x]!=null&&hit.has(ids[y][x])){ids[y][x]=++pid;fallSet.add(pid);}
-    hit.forEach(h=>fallSet.delete(h));
+    for(let y=0;y<R;y++)for(let x=0;x<C;x++)if(ids[y][x]!=null&&hit.has(ids[y][x])){ids[y][x]=++pid;fs.add(pid);}
+    hit.forEach(h=>fs.delete(h));
   }
-  if(mode==='normal'){
+  if(m==='normal'){
     // 普通模式：被消到的方块剩下的部分（连在一起的当一个整体）还会继续往下掉
-    const seen=newBoard();
-    for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){
+    const seen=Array.from({length:R},()=>Array(C).fill(null));
+    for(let y=0;y<R;y++)for(let x=0;x<C;x++){
       const old=ids[y][x];if(old==null||seen[y][x]||!hit.has(old))continue;
       const nid=++pid,st=[[y,x]];seen[y][x]=1;
       while(st.length){const [cy,cx]=st.pop();ids[cy][cx]=nid;
         [[1,0],[-1,0],[0,1],[0,-1]].forEach(([dy,dx])=>{const ny=cy+dy,nx=cx+dx;
-          if(ny>=0&&ny<ROWS&&nx>=0&&nx<COLS&&!seen[ny][nx]&&ids[ny][nx]===old){seen[ny][nx]=1;st.push([ny,nx]);}});}
-      fallSet.add(nid);
+          if(ny>=0&&ny<R&&nx>=0&&nx<C&&!seen[ny][nx]&&ids[ny][nx]===old){seen[ny][nx]=1;st.push([ny,nx]);}});}
+      fs.add(nid);
     }
-    hit.forEach(h=>fallSet.delete(h));
+    hit.forEach(h=>fs.delete(h));
   }
+}
+function removeRows(){
+  cutRows(board,ids,fallSet,mode,clearRows);
   const old=level;lines+=clearRows.length;level=startLevel+Math.floor(lines/10);
   if(level>old){sfx.level();toast('LEVEL UP!');}
   clearRows=[];
+}
+
+/* ---------- 标题画面：模式演示小棋盘（同一个局面，按当前模式的规则自动播放） ---------- */
+// 字母 = 一个方块（同字母同一块），f = 要掉下来的 L 形；a/b/o 是以前剩下的灰色碎块
+const DEMO_MAP=['......','......','OO....','OO....','LLL...','LJJJ..','...Jo.','a..boo'];
+const DEMO_K={O:'O',L:'L',J:'J',a:'G',b:'G',o:'G'},DEMO_F=[[1,0],[1,0],[1,1]],DEMO_FX=4,DEMO_FY=3;
+const demo={m:null};
+function demoReset(){
+  demo.b=DEMO_MAP.map(r=>[...r].map(c=>c==='.'?null:DEMO_K[c]));
+  demo.ids=DEMO_MAP.map(r=>[...r].map(c=>c==='.'?null:c));
+  demo.fs=new Set();demo.m=mode;demo.ph='wait';demo.t=0;demo.fy=-3;demo.rows=[];demo.chain=0;
+}
+function demoLines(){
+  demo.rows=[];demo.b.forEach((r,y)=>{if(r.every(Boolean))demo.rows.push(y);});
+  demo.t=0;if(demo.rows.length){demo.chain++;demo.ph='clear';}else demo.ph='hold';
+}
+function demoTick(){
+  if(demo.m!==mode)demoReset();
+  const t=++demo.t;
+  if(demo.ph==='wait'){if(t>=40){demo.ph='drop';demo.t=0;}}
+  else if(demo.ph==='drop'){if(t%6===0){
+    if(demo.fy<DEMO_FY)demo.fy++;
+    else{DEMO_F.forEach((row,r)=>row.forEach((v,c)=>{if(v){demo.b[DEMO_FY+r][DEMO_FX+c]='T';demo.ids[DEMO_FY+r][DEMO_FX+c]='f';}}));demoLines();}
+  }}
+  else if(demo.ph==='clear'){if(t>=30){cutRows(demo.b,demo.ids,demo.fs,demo.m,demo.rows);demo.rows=[];demo.ph='fall';demo.t=0;}}
+  else if(demo.ph==='fall'){if(t%8===0&&!settle(demo.b,demo.ids,demo.fs,demo.m))demoLines();}
+  else if(demo.ph==='hold'){if(t>=150)demoReset();}
 }
 
 /* ---------- 联机对战（WebRTC 直连，手动交换暗号，不需要服务器） ---------- */
@@ -1047,6 +1080,7 @@ function tick(){
   }else modeDownPrev=true;
   // 标题画面装饰方块
   if(state==='title'){
+    demoTick();
     if(frame%40===0)deco.push({k:KEYS[Math.random()*7|0],x:Math.random()*W,y:-30,v:0.4+Math.random()*0.8,r:Math.random()*4|0});
     deco.forEach(d=>d.y+=d.v);deco=deco.filter(d=>d.y<H+30);
   }
@@ -1112,6 +1146,23 @@ function drawTitle(){
   txt('◀▶ LEVEL · ▲▼ MODE · L LANG',W/2,204,8,'#cfc8ff','center');
   }
   txt('CREDIT 99',W-6,214,7,'#ff9ad0','right');
+  if(!PORT)drawDemo(278,124,9);
+}
+function drawDemo(cx,y,s){ // 演示小棋盘：cx = 中心 x，y = 上边，s = 一格多大
+  if(!demo.b)return;
+  const DC=demo.b[0].length,DR=demo.b.length,w=DC*s,h=DR*s,x=Math.round(cx-w/2),mc=MODE_COL[mode];
+  txt('DEMO',cx,y-Math.max(9,s*0.8),Math.max(7,Math.round(s*0.6)),mc,'center');
+  ctx.fillStyle='rgba(4,3,20,.92)';ctx.fillRect(x,y,w,h);
+  ctx.strokeStyle=mc;ctx.lineWidth=1.5;ctx.strokeRect(x-1,y-1,w+2,h+2);
+  for(let r=0;r<DR;r++)for(let c=0;c<DC;c++){
+    const k=demo.b[r][c];if(!k)continue;
+    cell(x+c*s,y+r*s,demo.ph==='clear'&&demo.rows.includes(r)&&(demo.t>>2)%2?'#ffffff':COLORS[k],s);
+  }
+  if(demo.ph==='drop'){
+    ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+    drawPiece(DEMO_F,COLORS.T,x+DEMO_FX*s,y+demo.fy*s,s);ctx.restore();
+  }
+  if(demo.chain>1&&(demo.ph==='clear'||demo.ph==='fall'))txt(demo.chain+' CHAIN!!',cx,y+h/2-s*0.4,Math.max(7,Math.round(s*0.75)),'#ffd23f','center');
 }
 function drawGame(){
   sky();
@@ -1257,8 +1308,9 @@ function drawOpp(){
 }
 function draw(){
   if(state==='title'&&PORT){ // 竖屏标题：把原来的横版标题缩小放中间
-    sky();const w0=W,h0=H,k=W/320;ctx.save();ctx.translate(0,(H-224*k)/2);ctx.scale(k,k);W=320;H=224;skyNoBg=true;
+    sky();const w0=W,h0=H,k=W/320;ctx.save();ctx.translate(0,4);ctx.scale(k,k);W=320;H=224;skyNoBg=true;
     drawTitle();skyNoBg=false;W=w0;H=h0;ctx.restore();
+    drawDemo(W/2,116,13); // 竖屏：标题放上面，下面放大号演示
   }else if(state==='title')drawTitle();else drawGame();
   if(toastT>0){
     ctx.globalAlpha=Math.min(1,toastT/20);
